@@ -20,3 +20,5 @@ Rahmenbed.	Programmiersprache Java 10; zugelassene externe Bibliothek: JUnit.
 <p align="center">
   <img src="https://github.com/captainblubb/SCROAChartFX/blob/master/resources/GUI.png" alt="Mockup">
 </p>
+
+Required: JRE (1.8.201)
