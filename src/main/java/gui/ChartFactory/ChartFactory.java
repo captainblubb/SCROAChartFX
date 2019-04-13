@@ -74,26 +74,32 @@ public class ChartFactory {
     }
 
     public void addSceneSizeChangedListener(Chart chart, Pane scene) {
-        scene.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                // System.out.println("scene Width: " + newSceneWidth);
-                resetTo(chart, scene.widthProperty().get(), scene.heightProperty().get());
-                // System.out.println("resize ok");
-            }
-        });
-        scene.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                // System.out.println("scene Height: " + newSceneHeight);
-                resetTo(chart, scene.widthProperty().get(), scene.heightProperty().get());
-                // System.out.println("resize ok");
-            }
-        });
+        try {
+            scene.widthProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                    // System.out.println("scene Width: " + newSceneWidth);
+                    resetTo(chart, scene.widthProperty().get(), scene.heightProperty().get());
+                    // System.out.println("resize ok");
+                }
+            });
+            scene.heightProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                    // System.out.println("scene Height: " + newSceneHeight);
+                    resetTo(chart, scene.widthProperty().get(), scene.heightProperty().get());
+                    // System.out.println("resize ok");
+                }
+            });
+        }catch (Exception exp){
+            System.out.println("Could not update size of Chart "+exp);
+        }
     }
 
     //Bewegung reset
     protected void resetTo(Chart chart, double width, double height) {
+
+        try {
 
         if ( width>0 &&height>0 && chart.getCanvas() instanceof OffscreenCanvas) {
             OffscreenCanvas canvas = (OffscreenCanvas) chart.getCanvas();
@@ -107,7 +113,12 @@ public class ChartFactory {
 
         }
 
-        chart.render();
+
+        }catch (Exception exp){
+            System.out.println("Exception reset To Method in Chart: "+exp);
+        }
+
+       // chart.render();
     }
 
     //Erstellt ein Chart
@@ -180,7 +191,9 @@ public class ChartFactory {
      *  Update drawed Points on surface
      * @param points3d
      */
-    public void updatePointsInChart(List<Point3d> points3d){
+    public synchronized void updatePointsInChart(List<Point3d> points3d){
+
+        try {
 
         //Case 1: not enough points
         if(jzy3dPoints.size()<points3d.size()) {
@@ -217,7 +230,14 @@ public class ChartFactory {
                 jzy3dPoints.get(i).setData(new Coord3d(points3d.get(i).x,points3d.get(i).y,points3d.get(i).z));
             }
         }
-        chart.updateProjectionsAndRender();
+
+        chart.render();
+
+        }catch (Exception exp){
+
+            System.out.println("Exception: in update Chart method"+exp.toString());
+            exp.printStackTrace();
+        }
 
     }
 

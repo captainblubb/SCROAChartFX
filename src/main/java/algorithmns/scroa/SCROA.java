@@ -161,12 +161,8 @@ public class SCROA implements IAlgorithm {
     @Override
     public void run() {
 
-        /*
-        try {
-            scroaThread = Thread.currentThread();
-            while (!Thread.currentThread().isInterrupted()) {
-                Platform.runLater(() -> {
-                */
+
+
 
                             int onWallCollHappend = 0;
                             int interMolColHappend = 0;
@@ -266,18 +262,21 @@ public class SCROA implements IAlgorithm {
 
                                             }
                                         }
-                                    }else {
+                                    }else if(currentIteration>=globalConfig.Iterations) {
+                                        //If Thread is finished, wait 200ms -> next Iteration and wait for Stop or iterations are raised....
+                                        try{
+                                            Thread.sleep(200);
+                                        }catch (Exception exp){
 
-                                        //If Thread is finished, wait for Stop or iterations are raised....
-                                        Thread.sleep(200);
+                                        }
                                     }
                                 }
                             } catch (Exception exp) {
                                 if (globalConfig.loggin) {
-                                    loggerFileWriter.logInformation("croa Thread ended in an Exception: " + exp);
+                                    loggerFileWriter.logInformation("Scroa Thread ended in an Exception: " + exp);
                                 } else {
-                                    System.out.println(exp.toString()+" "+exp.getMessage());
-                                }
+                                    System.out.println("Exception in SCROA Thread "+exp.toString());
+                                    exp.printStackTrace();}
                             }
 
                             try {
@@ -292,14 +291,6 @@ public class SCROA implements IAlgorithm {
                             System.out.println("SCROAParamAnalysis algorithm ("+algorithmCounter+") Average KE end " + molecules.stream().map(m -> m.getKE()).collect(Collectors.averagingDouble(d -> d)));
                             System.out.println("SCROAParamAnalysis algorithm ("+algorithmCounter+") buffer at end " + buffer.getBuffer());
 
-                            /*
-                });
-            }
-        } catch (Exception e) {
-            Thread.currentThread().interrupt();
-            stop();
-        }
-                */
     }
 
     @Override
