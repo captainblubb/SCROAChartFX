@@ -1,0 +1,55 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="gui.Controller" style="-fx-background-color: white;" >
+    <children>
+        <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: white;">
+            <children>
+                <Label fx:id="sliderValue" prefWidth="120" text="Iterations: 100000"/>
+                <Slider fx:id="slider" min="0" max="100000" value="10000" blockIncrement="500" ></Slider>
+                <Button fx:id="startButton" mnemonicParsing="false" onAction="#startSimulation" text="Start" prefWidth="75" />
+                <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#stopSimulation" text="Stop" />
+                <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseSimulation" text="Pause" />
+                <ComboBox fx:id="functionComboBox" prefWidth="175.0" promptText="Rosenbrock" onAction="#comboBoxAction" />
+                <Button fx:id="toggleSurface" mnemonicParsing="false" onAction="#toggleSurface" text="Surface" />
+                <Button fx:id="enableLogging" mnemonicParsing="false" onAction="#enableLogging" text="Logging off" />
+
+            </children>
+            <padding>
+                <Insets bottom="10.0" top="10.0" />
+            </padding>
+        </HBox>
+        <HBox alignment="CENTER" spacing="15.0" style="-fx-background-color: lightGray" minHeight="40">
+            <children>
+                <HBox alignment="CENTER">
+                    <children>
+                        <Label fx:id="label_Iteration" text="Iteration: 0" alignment="CENTER" minWidth="200" ></Label>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+        <HBox fx:id="chartHBox"  spacing="10" prefWidth="100000" prefHeight="100000" alignment="CENTER"  style="-fx-background-color: lightGray;" >
+            <children>
+               <!-- <StackPane fx:id="chartLeft" alignment="CENTER_LEFT" prefWidth="350" prefHeight="-Infinity" style="-fx-background-color: red;"/> -->
+               <!-- <StackPane fx:id="chartRight" alignment="CENTER_RIGHT" prefWidth="350" prefHeight="-Infinity" style="-fx-background-color: blue;"/> -->
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" spacing="20.0" style="-fx-background-color: lightGray" minHeight="40">
+            <children>
+                <HBox alignment="CENTER_LEFT">
+                    <Label minWidth="50"></Label>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <Label fx:id="label_Algo1" alignment="CENTER_LEFT" minWidth="470"  text="CROA no Solution yet" ></Label>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <Label fx:id="label_Algo2" alignment="CENTER_LEFT" minWidth="450" text="SCROA no Solution yet" ></Label>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>
