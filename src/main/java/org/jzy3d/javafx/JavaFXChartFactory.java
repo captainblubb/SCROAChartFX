@@ -1,15 +1,11 @@
 package org.jzy3d.javafx;
 
-import java.awt.image.BufferedImage;
-import java.util.Date;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import org.apache.log4j.Logger;
 import org.jzy3d.chart.AWTChart;
 import org.jzy3d.chart.Chart;
@@ -31,6 +27,9 @@ import org.jzy3d.plot3d.rendering.view.AWTImageRenderer3d.DisplayListener;
 import org.jzy3d.plot3d.rendering.view.AWTRenderer3d;
 import org.jzy3d.plot3d.rendering.view.Renderer3d;
 import org.jzy3d.plot3d.rendering.view.View;
+
+import java.awt.image.BufferedImage;
+import java.util.Date;
 
 @SuppressWarnings("restriction")
 /* Disable JavaFX access restriction warnings */
@@ -174,7 +173,6 @@ public class JavaFXChartFactory extends AWTChartComponentFactory {
         return key;
     }
 
-    /** TODO : replace by a JavaFXScreenshotKeyController */
     @Override
     public IScreenshotKeyController newKeyboardScreenshotController(Chart chart) {
         // trigger screenshot on 's' letter

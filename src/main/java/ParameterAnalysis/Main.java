@@ -6,15 +6,15 @@ public class Main {
        // analysisParamCROADefault();
         // analysisParamSCROADefault();
         ParameterAnalysis parameterAnalysis = new ParameterAnalysis();
-        String[] functions = {"Rosenbrock"};
-        int times = 10;
+        String[] functions = {"Ackley"};
+        int times = 1;
         for (String function : functions) {
-            System.out.println("CROA Default "+function+" start");
+            System.out.println("SCROA Default "+function+" start");
             //Single Param Analysis
             for (int i = 0; i < times; i++) {
                 parameterAnalysis.SingleParameterAnalyticsSpecificParam(function, 16, 14500, "CROA");
             }
-            System.out.println("CROA Default " +function+" done");
+            System.out.println("SCROA Default " +function+" done");
         }
     }
 
