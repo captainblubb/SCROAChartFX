@@ -1,21 +1,64 @@
 package ParameterAnalysis;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Main {
 
     public static void main(String[] args){
-       // analysisParamCROADefault();
-        // analysisParamSCROADefault();
-        ParameterAnalysis parameterAnalysis = new ParameterAnalysis();
-        String[] functions = {"Rosenbrock"};
-        int times = 10;
-        for (String function : functions) {
-            System.out.println("CROA Default "+function+" start");
-            //Single Param Analysis
-            for (int i = 0; i < times; i++) {
-                parameterAnalysis.SingleParameterAnalyticsSpecificParam(function, 16, 14500, "CROA");
-            }
-            System.out.println("CROA Default " +function+" done");
+
+        ExecutorService executorService = Executors.newFixedThreadPool(6);
+        ArrayList<Executer> executers = new ArrayList();
+
+        for (int i = 0; i<6;i++){
+            executers.add(new Executer(i+1));
         }
+
+        for (int r = 0; r < executers.size(); r++) {
+            executorService.execute(executers.get(r));
+        }
+
+        executorService.shutdown();
+        // Wait until all threads are finish
+        while (!executorService.isTerminated()) {
+            try {
+                Thread.sleep(500);
+            }catch (Exception exp){
+
+            }
+
+        }
+ /*
+        ParameterAnalysis parameterAnalysis;
+        ParameterAnalysis.stepsEachVarMinusOne = 7;
+        ParameterAnalysis.RunsEachConfigMultiple = 1;
+
+        for (int i = 0;i!=3;i++) {
+            parameterAnalysis = new ParameterAnalysis();
+            parameterAnalysis.EveryImportantParameterAnalyticsCROA("Ackley");
+
+            parameterAnalysis = new ParameterAnalysis();
+            parameterAnalysis.EveryImportantParameterAnalyticsCROA("Rosenbrock");
+
+            parameterAnalysis = new ParameterAnalysis();
+            parameterAnalysis.EveryImportantParameterAnalyticsCROA("Rastirgin");
+        }
+
+        ParameterAnalysis.stepsEachVarMinusOne = 5;
+        ParameterAnalysis.RunsEachConfigMultiple =1;
+        for (int i = 0;i!=3;i++) {
+
+            parameterAnalysis = new ParameterAnalysis();
+            parameterAnalysis.EveryImportantParameterAnalyticsSCROA("Ackley");
+
+            parameterAnalysis = new ParameterAnalysis();
+            parameterAnalysis.EveryImportantParameterAnalyticsSCROA("Rosenbrock");
+
+            parameterAnalysis = new ParameterAnalysis();
+            parameterAnalysis.EveryImportantParameterAnalyticsSCROA("Rastirgin");
+        }
+      */
     }
 
     public static void MultipleParamImportant(){
@@ -24,8 +67,8 @@ public class Main {
         ParameterAnalysis parameterAnalysis = new ParameterAnalysis();
 
         String[] functions = {"Rastirgin","Ackley","Rosenbrock"};
-        int[] importantForCROA = {5,11,12,13};
-        int[] importantForSCROA = {2,3,4,5,11,12,13};
+        int[] importantForCROA = {5,11,12,13,15};
+        int[] importantForSCROA = {2,3,4,5,11,12,13,15};
 
         int times = 1;
 
@@ -35,7 +78,7 @@ public class Main {
         //3*7*5*15.000 Iterations  //== 1.575.000 / 5Iterations
         for (String function : functions) {
             //Multiple Param analysis
-            ParameterAnalysis.stepsEachVar = 8; //==2.100.000 Iterations *3
+            parameterAnalysis.stepsEachVarMinusOne = 8; //==2.100.000 Iterations *3
             parameterAnalysis.EveryImportantParameterAnalyticsSCROA(function);
             System.out.println("SCROA"+function+" done");
         }
@@ -48,7 +91,7 @@ public class Main {
         for (String function : functions) {
             System.out.println(function+" start");
             //Multiple Param analysis
-            ParameterAnalysis.stepsEachVar = 25; //==390625 Iterations *3
+            parameterAnalysis.stepsEachVarMinusOne = 25; //==390625 Iterations *3
             parameterAnalysis.EveryImportantParameterAnalyticsCROA(function);
             System.out.println("CROA " +function+" done");
         }
@@ -67,14 +110,14 @@ public class Main {
 
         //############## CROA ##################
         int times = 1;
-        ParameterAnalysis.stepsEachVar= 357;
+        parameterAnalysis.stepsEachVarMinusOne= 357;
         //3*4*5*15.000 Iterations //== 1.575.000 /5 Iterations
         for (String function : functions) {
             System.out.println(function+" start");
             //Single Param Analysis
             for (int n = 0; n < importantForCROA.length; n++) {
                 for (int i = 0; i < times; i++) {
-                    ParameterAnalysis.stepsEachVar++;
+                    parameterAnalysis.stepsEachVarMinusOne++;
                     parameterAnalysis.SingleParameterAnalyticsSpecificParam(function, importantForCROA[n], 15000, "CROA");
                 }
             }
@@ -84,13 +127,13 @@ public class Main {
 
 
         //############## SCROA ##################
-        ParameterAnalysis.stepsEachVar= 357;
+        parameterAnalysis.stepsEachVarMinusOne= 357;
         //3*7*5*15.000 Iterations  //== 1.575.000 / 5Iterations
         for (String function : functions) {
             //Single Param Analysis
             for (int n = 0; n < importantForSCROA.length; n++) {
                 for (int i = 0; i < times; i++) {
-                    ParameterAnalysis.stepsEachVar++;
+                    parameterAnalysis.stepsEachVarMinusOne++;
                     parameterAnalysis.SingleParameterAnalyticsSpecificParam(function, importantForSCROA[n], 15000, "SCROA");
                 }
             }
@@ -109,7 +152,7 @@ public class Main {
             //Single Param Analysis
             for (int n = 0; n < importantForCROA.length; n++) {
                 System.out.println("CROA "+n+"/"+importantForCROA.length);
-                ParameterAnalysis.stepsEachVar= 500;
+                parameterAnalysis.stepsEachVarMinusOne= 500;
                 for (int i = 0; i < times; i++) {
                     parameterAnalysis.SingleParameterAnalyticsSpecificParam(function, importantForCROA[n], 14500, "CROA");
                 }
@@ -129,7 +172,7 @@ public class Main {
             //Single Param Analysis
             for (int n = 0; n < importantForSCROA.length; n++) {
                 System.out.println("SCROA "+n+"/"+importantForSCROA.length);
-                ParameterAnalysis.stepsEachVar= 500;
+                parameterAnalysis.stepsEachVarMinusOne= 500;
                 for (int i = 0; i < times; i++) {
                     parameterAnalysis.SingleParameterAnalyticsSpecificParam(function, importantForSCROA[n], 14500, "SCROA");
                 }

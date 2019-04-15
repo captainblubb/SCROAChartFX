@@ -15,7 +15,7 @@ public class globalConfig {
     public static int Iterations = 10000;
 
     //public static int initialStepsize = 1; //Steps between Moles @ Init
-    public static final double distanceToBoundrys = 0.05; // Init distance to boundry // just gui apperance
+    public static final double distanceToBoundrys = 0.01; // Init distance to boundry // just gui apperance
     public static boolean loggin = false;
 
     //round after , in ToString in Point
