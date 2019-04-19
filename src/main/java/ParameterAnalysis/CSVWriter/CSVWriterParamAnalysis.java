@@ -15,8 +15,13 @@ public class CSVWriterParamAnalysis {
         this.filePath = path;
         try {
 
+
             boolean fileEmpty = false;
             File f = new File(path);
+            //If path does not exist, try to create dirs
+            if(!f.exists()){
+                new File(f.getParent()).mkdirs();
+            }
             if(f.exists() && !f.isDirectory()) {
                 //Check if file is empty
                 FileInputStream fis = new FileInputStream(new File(path));
@@ -32,6 +37,7 @@ public class CSVWriterParamAnalysis {
                 br.close();
                 fis.close();
             }else {
+
                 fileEmpty=true;
             }
             boolean csvNotInitialized = true;
@@ -62,11 +68,78 @@ public class CSVWriterParamAnalysis {
 
     }
 
+    public CSVWriterParamAnalysis(String path,int i){
+
+        this.filePath = path;
+        try {
+
+
+            boolean fileEmpty = false;
+            File f = new File(path);
+            //If path does not exist, try to create dirs
+            if(!f.exists()){
+                new File(f.getParent()).mkdirs();
+            }
+            if(f.exists() && !f.isDirectory()) {
+                //Check if file is empty
+                FileInputStream fis = new FileInputStream(new File(path));
+                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+                String line = br.readLine();
+                if (line != null) {
+                    if (line.equals("")) {
+                        fileEmpty = true;
+                    }
+                }else {
+                    fileEmpty=true;
+                }
+                br.close();
+                fis.close();
+            }else {
+
+                fileEmpty=true;
+            }
+            boolean csvNotInitialized = true;
+            int counter = 0;
+            while(csvNotInitialized && counter < 50) {
+
+                try {
+
+                    if (fileEmpty) {
+                        FileWriter writer = new FileWriter(path, false);
+                        csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("Function","AlgorithmnName","c1","c2","w","keMinLossRate","moleColl","minimumKe","numberOfHitsForDecomposition","PopSize","Median","Average"));
+                        csvNotInitialized=false;
+                    } else {
+                        FileWriter writer = new FileWriter(path, true);
+                        csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
+                        csvNotInitialized= false;
+                    }
+                }catch (Exception exp){
+                    //... fileWriter didnt close file yet...
+                    Thread.sleep(5);
+                    counter++;
+                }
+            }
+        }catch (Exception exp){
+            System.out.println("Exception in CSVWriterParamAnalysis ");
+            exp.printStackTrace();
+        }
+
+    }
+
+    public void addRecordSpecial(String function ,String algorithmnName, ConfigurationAlgorithm conf,double median, double average) throws IOException {
+        if(csvPrinter != null) {
+            csvPrinter.printRecord(function,algorithmnName, conf.c1, conf.c2, conf.w, conf.keMinLossRate, conf.moleColl, conf.minimumKe, conf.numberOfHitsForDecomposition,conf.PopSize,median,average);
+        }
+    }
+
+
     public synchronized void addRecord(String function ,String algorithmnName, String point, String minPE, ConfigurationAlgorithm conf) throws IOException {
         if(csvPrinter != null) {
             csvPrinter.printRecord(function,algorithmnName, point, minPE, conf.c1, conf.c2, conf.w, conf.maxVelocity, conf.initialMaxLengthVelocityPerDim, conf.minVelocityStep, conf.trysOfPSOUpdate, conf.distanceToBoundrys, conf.keMinLossRate, conf.moleColl, conf.initialKE, conf.minimumKe, conf.initialBuffer, conf.numberOfHitsForDecomposition, conf.moveAlongGradeMaxStep, conf.impactOfOtherMolecule,conf.PopSize);
         }
     }
+
+
 
     public void flush() throws Exception{
         csvPrinter.flush();
