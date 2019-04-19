@@ -106,7 +106,7 @@ public class CSVWriterParamAnalysis {
 
                     if (fileEmpty) {
                         FileWriter writer = new FileWriter(path, false);
-                        csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("Function","AlgorithmnName","c1","c2","w","maxVelocity","initialMaxLengthVelocityPerDim","minVelocityStep","trysOfPSOUpdate","keMinLossRate","moleColl","initialKE","minimumKe","initialBuffer","numberOfHitsForDecomposition","moveAlongGradeMaxStep","impactOfOtherMolecule","PopSize","Median","Average"));
+                        csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("Function","AlgorithmnName","c1","c2","w","keMinLossRate","moleColl","minimumKe","numberOfHitsForDecomposition","PopSize","Median","Average"));
                         csvNotInitialized=false;
                     } else {
                         FileWriter writer = new FileWriter(path, true);
@@ -126,6 +126,12 @@ public class CSVWriterParamAnalysis {
 
     }
 
+    public void addRecordSpecial(String function ,String algorithmnName, ConfigurationAlgorithm conf,double median, double average) throws IOException {
+        if(csvPrinter != null) {
+            csvPrinter.printRecord(function,algorithmnName, conf.c1, conf.c2, conf.w, conf.keMinLossRate, conf.moleColl, conf.minimumKe, conf.numberOfHitsForDecomposition,conf.PopSize,median,average);
+        }
+    }
+
 
     public synchronized void addRecord(String function ,String algorithmnName, String point, String minPE, ConfigurationAlgorithm conf) throws IOException {
         if(csvPrinter != null) {
@@ -133,11 +139,7 @@ public class CSVWriterParamAnalysis {
         }
     }
 
-    public void addRecordSpecial(String function ,String algorithmnName, ConfigurationAlgorithm conf,double median, double average) throws IOException {
-        if(csvPrinter != null) {
-            csvPrinter.printRecord(function,algorithmnName, conf.c1, conf.c2, conf.w, conf.maxVelocity, conf.initialMaxLengthVelocityPerDim, conf.minVelocityStep, conf.trysOfPSOUpdate, conf.keMinLossRate, conf.moleColl, conf.initialKE, conf.minimumKe, conf.initialBuffer, conf.numberOfHitsForDecomposition, conf.moveAlongGradeMaxStep, conf.impactOfOtherMolecule,conf.PopSize,median,average);
-        }
-    }
+
 
     public void flush() throws Exception{
         csvPrinter.flush();

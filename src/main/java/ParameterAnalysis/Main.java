@@ -23,7 +23,7 @@ public class Main {
         // Wait until all threads are finish
         while (!executorService.isTerminated()) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             }catch (Exception exp){
 
             }

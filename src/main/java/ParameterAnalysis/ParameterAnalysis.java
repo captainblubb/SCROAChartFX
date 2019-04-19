@@ -26,7 +26,7 @@ public class ParameterAnalysis {
     private double c1 = 1.4962;
     private double c2 = 1.4962;
     private double w = 0.52984;
-    private double maxVelocity = 10;
+    private double maxVelocity = 15;
     private double initialMaxLengthVelocityPerDim = 3;
     private double minVelocityStep = 0.0;
     private int trysOfPSOUpdate = 1; //Not used
@@ -38,7 +38,7 @@ public class ParameterAnalysis {
     private double initialBuffer = 200.0;
     private int numberOfHitsForDecomposition = 30;
     private double moveAlongGradeMaxStep = 0.0001;
-    private double impactOfOtherMolecule = 0.15;
+    private double impactOfOtherMolecule = 0.185;
 
     //dynamicly modified
     private static int PopSizeMin = 5;
@@ -394,10 +394,10 @@ public class ParameterAnalysis {
             case 3: return "c2";
             case 4: return "w";
                      case 5: return "impactOfOtherMolecule";
-                      case 6: return "initalBuffer";
-                      case 7: return "initalKE";
-                      case 8: return "minVelocityStep";
-                       case 9: return "maxLengthVelocityPerDimInitial";
+                     case 6: return "initalBuffer";
+                     case 7: return "initalKE";
+                     case 8: return "minVelocityStep";
+                     case 9: return "maxLengthVelocityPerDimInitial";
                      case 10: return "maxVelocity";
             case 11: return "minKELossRate";
             case 12: return "moleColl";
@@ -693,15 +693,15 @@ public class ParameterAnalysis {
             case 3: return "c2";
             case 4: return "w";
                      case 5: return "impactOfOtherMolecule";
-                      case 6: return "initalBuffer";
-                      case 7: return "initalKE";
-                      case 8: return "minVelocityStep";
-                       case 9: return "maxLengthVelocityPerDimInitial";
+                     case 6: return "initalBuffer";
+                     case 7: return "initalKE";
+                     case 8: return "minVelocityStep";
+                     case 9: return "maxLengthVelocityPerDimInitial";
                      case 10: return "maxVelocity";
             case 11: return "minKELossRate";
             case 12: return "moleColl";
             case 13: return "numberOfHitsForDecomp";
-            case 14: return "moveAlongGradeMaxStep";
+                     case 14: return "moveAlongGradeMaxStep";
             case 15: return "minimumKE";
          */
 
@@ -735,7 +735,7 @@ public class ParameterAnalysis {
 
                             CSVWriterParamAnalysis csvWriterParamAnalysisSCROA = new CSVWriterParamAnalysis("AnalysisData/MultipleParam/SCROA/" + function + "/SCROAImportantParameter.csv",1);
 
-                            System.out.println("SCROA__"+function+"____Progress "+currentIteration+"/"+maxIterations+" in % "+ ((int)((0.0+currentIteration/0.0+maxIterations)*100)));
+                            System.out.println("SCROA__"+function+"____Progress "+currentIteration+"/"+maxIterations+" in % "+ ((int)((0.0+currentIteration/0.0+maxIterations)*100.0))+"%");
 
                             ArrayList<SCROAParamAnalysis> SCROAs = new ArrayList<>();
 
@@ -825,14 +825,14 @@ public class ParameterAnalysis {
 
     public void EveryImportantParameterAnalyticsCROAWithMedian(String function) {
 
-        //1,5,11,12,13,15
+        //1,11,12,13,15
 
         /*
                     case 1: return "popSize";
             case 2: return "c1";
             case 3: return "c2";
             case 4: return "w";
-                    case 5: return "impactOfOtherMolecule";
+            case 5: return "impactOfOtherMolecule";
             case 6: return "initalBuffer";
             case 7: return "initalKE";
             case 8: return "minVelocityStep";
@@ -848,10 +848,10 @@ public class ParameterAnalysis {
         // duration = ((stepsEachVarMinusOne+1)*RunsEachConfigMultiple exp 6 )
 
 
-        stepsEachVarMinusOne = 10;
+        stepsEachVarMinusOne = 14;
         RunsEachConfigMultiple = 6;
 
-        double maxIterations = Math.pow((stepsEachVarMinusOne+1),6)*RunsEachConfigMultiple;
+        double maxIterations = Math.pow((stepsEachVarMinusOne+1),5)*RunsEachConfigMultiple;
         double currentIteration = 0;
         for (int a = stepCounter; a <= stepsEachVarMinusOne; a++) {
             System.out.println("CROA__"+function+"_______________Progress :: " + a + "/" + stepsEachVarMinusOne);
