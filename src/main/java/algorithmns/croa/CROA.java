@@ -50,6 +50,7 @@ public class CROA implements IAlgorithm {
     CyclicBarrier barrier;
     protected volatile boolean pause = false;
     public volatile boolean stopped = false;
+    Thread croaThread;
 
     IUpdateable gui;
 
@@ -146,6 +147,7 @@ public class CROA implements IAlgorithm {
 
     @Override
     public void run() {
+
                     int onWallCollHappend = 0;
                     int interMolColHappend = 0;
                     int decompositionTrys = 0;
@@ -257,10 +259,13 @@ public class CROA implements IAlgorithm {
                                 }
                             }
 
-                        }else {
+                        }else if(currentIteration>=globalConfig.Iterations) {
+                                //If Thread is finished, wait 200ms -> next Iteration and wait for Stop or iterations are raised....
+                                try{
+                                    Thread.sleep(200);
+                                }catch (Exception exp){
 
-                                //If Thread is finished, wait for Stop or iterations are raised....
-                                Thread.sleep(200);
+                                }
                             }
 
                         }
@@ -268,7 +273,8 @@ public class CROA implements IAlgorithm {
                        if (globalConfig.loggin) {
                            loggerFileWriter.logInformation("croa Thread ended in an Exception: " + exp);
                        }else {
-                           System.out.println("Exception in CROAParamAnalysis Thread"+exp.toString());
+                           System.out.println("Exception in CROA Thread "+exp.toString());
+                           exp.printStackTrace();
                        }
                     }
 
@@ -286,8 +292,6 @@ public class CROA implements IAlgorithm {
                     }catch (Exception exp){
 
                     }
-
-
     }
 
     public void pause(){
