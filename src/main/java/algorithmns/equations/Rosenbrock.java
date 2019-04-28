@@ -65,22 +65,22 @@ public class Rosenbrock implements IEquation{
        }else if (algorithmn.equals("SCROA")){
 
            configurationAlgorithm = new ConfigurationAlgorithm(
-                   1.97, //c1
-                   1.51, //c2
-                   0.205,//w
+                   0.7, //c1
+                   1.4962, //c2
+                   0.72984,//w
                    10,    //maxVelocity
                    2,     //initialMaxLengthVelocityPerDim
-                   0,   //minVelocityStepInPerCent
-                   10,    //trysOfPSOUpdate
+                   0.0,   //minVelocityStepInPerCent
+                   1,    //trysOfPSOUpdate
                    0.05,  //distaneToBoundrys
                    0.997,   //keMinLossRate
-                   0.096,   //moleColl %
-                   440,  //initialKE
-                   70.0,   //minimumKE
+                   0.6,   //moleColl %
+                   70,  //initialKE
+                   5,   //minimumKE
                    7700.0,   //initialBuffer
                    5,    //numberOfHitsForDecomposition
-                   0.072, //MoveAlonGradeMaxStep);
-                   0.00005,27); //
+                   0.1, //MoveAlonGradeMaxStep);
+                   0.185,27); //
        }
    }
 

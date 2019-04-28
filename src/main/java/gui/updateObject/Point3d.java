@@ -1,6 +1,6 @@
 package gui.updateObject;
 
-import static configuration.configuration.globalConfig.positionsAfterKomma;
+import static configuration.configuration.GlobalConfig.positionsAfterKomma;
 
 public class Point3d {
 

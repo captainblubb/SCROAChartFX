@@ -3,7 +3,7 @@ package configuration.configuration;
 import CSVWriter.CSVWriter;
 
 //Holding Parameters
-public class globalConfig {
+public class GlobalConfig {
 
     //Configuration for Algorithm
    // public static ConfigurationAlgorithm configurationAlgorithmCROA = new ConfigurationAlgorithm(); //Default config.. Set when new Equation loaded

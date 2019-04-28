@@ -27,7 +27,7 @@ import algorithmns.croa.models.MoleculeCROA;
 import algorithmns.croa.models.Point;
 import algorithmns.equations.IEquation;
 import algorithmns.equations.boundrys.Boundary;
-import configuration.configuration.globalConfig;
+import configuration.configuration.GlobalConfig;
 import configuration.logger.LoggerFileWriter;
 import gui.updateObject.IUpdateable;
 import gui.updateObject.Point3d;
@@ -65,7 +65,7 @@ public class CROA implements IAlgorithm {
         this.equation = equation;
         this.gui = gui;
         this.algorithmCounter = algorithmCounter;
-        if(globalConfig.loggin) {
+        if(GlobalConfig.loggin) {
             this.loggerFileWriter = new LoggerFileWriter("croa",algorithmCounter);
         }
         this.currentBestSolution = new BestSolution();
@@ -111,19 +111,19 @@ public class CROA implements IAlgorithm {
 
         //Check boundries start in boundrie not on boundrie
         double xRange = (boundary.getMaxX() - boundary.getMinX());
-        if(xRange-2* globalConfig.distanceToBoundrys > 1){
-            xRange-=(2* globalConfig.distanceToBoundrys);
+        if(xRange-2* GlobalConfig.distanceToBoundrys > 1){
+            xRange-=(2* GlobalConfig.distanceToBoundrys);
         }
         double yRange = (boundary.getMaxY() - boundary.getMinY());
-        if(yRange-2* globalConfig.distanceToBoundrys > 1){
-            yRange-=(2* globalConfig.distanceToBoundrys);
+        if(yRange-2* GlobalConfig.distanceToBoundrys > 1){
+            yRange-=(2* GlobalConfig.distanceToBoundrys);
         }
 
 
         for (int i = 0; i<initialPopoSize;i++){
 
-            double fixInX = boundary.getMinX()+ globalConfig.distanceToBoundrys;
-            double fixInY = boundary.getMinY()+ globalConfig.distanceToBoundrys;
+            double fixInX = boundary.getMinX()+ GlobalConfig.distanceToBoundrys;
+            double fixInY = boundary.getMinY()+ GlobalConfig.distanceToBoundrys;
 
             double randomX = randomGenerator.nextDouble()*xRange;
             double randomY = randomGenerator.nextDouble()*yRange;
@@ -169,7 +169,7 @@ public class CROA implements IAlgorithm {
 
                         while (!stopped) {
 
-                            if(currentIteration < globalConfig.Iterations ){
+                            if(currentIteration < GlobalConfig.Iterations ){
                             currentIteration++;
                             double randomCollission = randomGenerator.nextDouble();
 
@@ -238,11 +238,11 @@ public class CROA implements IAlgorithm {
                             }
 
 
-                            if (globalConfig.loggin) {
+                            if (GlobalConfig.loggin) {
                                 loggerFileWriter.logBestSolution("Croa", currentIteration, currentBestSolution.getBestSolutionPoint(), currentBestSolution.getBestPE());
                             }
 
-                            if (currentIteration % globalConfig.updateAfterIterations == 0 || pause) {
+                            if (currentIteration % GlobalConfig.updateAfterIterations == 0 || pause) {
                                 collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                                 bestSolution = currentBestSolution.getBestSolutionPoint();
                                 gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
@@ -259,7 +259,7 @@ public class CROA implements IAlgorithm {
                                 }
                             }
 
-                        }else if(currentIteration>=globalConfig.Iterations) {
+                        }else if(currentIteration>=GlobalConfig.Iterations) {
                                 //If Thread is finished, wait 200ms -> next Iteration and wait for Stop or iterations are raised....
                                 try{
                                     Thread.sleep(200);
@@ -270,7 +270,7 @@ public class CROA implements IAlgorithm {
 
                         }
                     } catch (Exception exp) {
-                       if (globalConfig.loggin) {
+                       if (GlobalConfig.loggin) {
                            loggerFileWriter.logInformation("croa Thread ended in an Exception: " + exp);
                        }else {
                            System.out.println("Exception in CROA Thread "+exp.toString());

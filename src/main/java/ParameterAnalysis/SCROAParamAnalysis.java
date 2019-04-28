@@ -24,8 +24,8 @@ import algorithmns.scroa.chemicalReactions.IChemicalReactionSCROA;
 import algorithmns.scroa.models.IMoleculeSCROA;
 import algorithmns.scroa.models.MoleculeSCROA;
 import algorithmns.scroa.pso.psoUpdate.IPSOUpdate;
-import algorithmns.scroa.pso.psoUpdate.PsoUpdate;
-import configuration.configuration.globalConfig;
+import algorithmns.scroa.pso.psoUpdate.PsoUpdateSCROA;
+import configuration.configuration.GlobalConfig;
 import configuration.logger.LoggerFileWriter;
 import gui.updateObject.Point3d;
 
@@ -57,7 +57,7 @@ public class SCROAParamAnalysis implements IAlgorithm {
 
         this.equation = equation;
         this.algorithmCounter = algorithmCounter;
-        if(globalConfig.loggin) {
+        if(GlobalConfig.loggin) {
             this.loggerFileWriter = new LoggerFileWriter("scroa",algorithmCounter);
         }
         this.currentBestSolution = new BestSolution();
@@ -75,7 +75,7 @@ public class SCROAParamAnalysis implements IAlgorithm {
         INeighbourhoodSearchTwo neighbourhoodSearchTwo = new RandombasedSearch(randomGenerator,equation);
 
         //Chemical Reactions
-        IPSOUpdate ipsoUpdate = new PsoUpdate(currentBestSolution,buffer,randomGenerator);
+        IPSOUpdate ipsoUpdate = new PsoUpdateSCROA(currentBestSolution,buffer,randomGenerator);
         //onwallIneffective
         IOnWallIneffectiveCollission onWallIneffectiveCollission = new OnWallIneffectiveCollission(randomGenerator,neighbourhoodSearchSingle,buffer);
         //intermolecularCollission
@@ -99,20 +99,20 @@ public class SCROAParamAnalysis implements IAlgorithm {
 
         //Check boundries start in boundrie not on boundrie
         double xRange = (boundary.getMaxX() - boundary.getMinX());
-        if(xRange-2* globalConfig.distanceToBoundrys > 1){
-            xRange-=(2* globalConfig.distanceToBoundrys);
+        if(xRange-2* GlobalConfig.distanceToBoundrys > 1){
+            xRange-=(2* GlobalConfig.distanceToBoundrys);
         }
         double yRange = (boundary.getMaxY() - boundary.getMinY());
-        if(yRange-2* globalConfig.distanceToBoundrys > 1){
-            yRange-=(2* globalConfig.distanceToBoundrys);
+        if(yRange-2* GlobalConfig.distanceToBoundrys > 1){
+            yRange-=(2* GlobalConfig.distanceToBoundrys);
         }
 
 
         for (int i = 0; i<initialPopoSize;i++){
 
 
-            double fixInX = boundary.getMinX()+ globalConfig.distanceToBoundrys;
-            double fixInY = boundary.getMinY()+ globalConfig.distanceToBoundrys;
+            double fixInX = boundary.getMinX()+ GlobalConfig.distanceToBoundrys;
+            double fixInY = boundary.getMinY()+ GlobalConfig.distanceToBoundrys;
 
             double randomX = randomGenerator.nextDouble()*xRange;
             double randomY = randomGenerator.nextDouble()*yRange;
@@ -136,7 +136,7 @@ public class SCROAParamAnalysis implements IAlgorithm {
 
 
     /*
-        Es wird CROAParamAnalysis verwendet jedoch Decomop und Synthesis durch PsoUpdate ersetzt
+        Es wird CROAParamAnalysis verwendet jedoch Decomop und Synthesis durch PsoUpdateSCROA ersetzt
 
         In PSOUpdate wird anhand der besten Lösung global und anhand der besten Lösung des Moleculs ein neuer Punkt berechnet
 
@@ -160,7 +160,7 @@ public class SCROAParamAnalysis implements IAlgorithm {
                                 Point bestSolution = currentBestSolution.getBestSolutionPoint();
 
 
-                                while (currentIteration < globalConfig.Iterations) {
+                                while (currentIteration < GlobalConfig.Iterations) {
 
 
 
@@ -218,11 +218,11 @@ public class SCROAParamAnalysis implements IAlgorithm {
                                         }
 
 
-                                        if (globalConfig.loggin) {
+                                        if (GlobalConfig.loggin) {
                                             loggerFileWriter.logBestSolution("croa", currentIteration, currentBestSolution.getBestSolutionPoint(), currentBestSolution.getBestPE());
                                         }
 
-                                        if (currentIteration % globalConfig.updateAfterIterations == 0 ) {
+                                        if (currentIteration % GlobalConfig.updateAfterIterations == 0 ) {
 
                                             collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                                             bestSolution = currentBestSolution.getBestSolutionPoint();
@@ -230,7 +230,7 @@ public class SCROAParamAnalysis implements IAlgorithm {
 
                                 }
                             } catch (Exception exp) {
-                                if (globalConfig.loggin) {
+                                if (GlobalConfig.loggin) {
                                     loggerFileWriter.logInformation("croa Thread ended in an Exception: " + exp);
                                 } else {
                                     System.out.println(exp.toString()+" "+exp.getMessage());

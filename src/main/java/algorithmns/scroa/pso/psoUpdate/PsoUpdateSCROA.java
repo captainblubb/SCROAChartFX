@@ -6,14 +6,14 @@ import algorithmns.croa.models.Buffer;
 import algorithmns.croa.models.Point;
 import algorithmns.scroa.models.IMoleculeSCROA;
 
-public class PsoUpdate implements IPSOUpdate{
+public class PsoUpdateSCROA implements IPSOUpdate{
 
 
     Buffer buffer;
     IBestSolutionListener bestSolutionListener;
     IRandomGenerator randomGenerator;
 
-    public PsoUpdate(IBestSolutionListener bestSolutionListener, Buffer buffer, IRandomGenerator randomGenerator){
+    public PsoUpdateSCROA(IBestSolutionListener bestSolutionListener, Buffer buffer, IRandomGenerator randomGenerator){
         this.randomGenerator = randomGenerator;
         this.buffer=buffer;
         this.bestSolutionListener=bestSolutionListener;

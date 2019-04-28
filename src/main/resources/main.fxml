@@ -37,7 +37,7 @@
         <HBox alignment="CENTER" spacing="20.0" style="-fx-background-color: lightGray" minHeight="40">
             <children>
                 <HBox alignment="CENTER_LEFT">
-                    <Label minWidth="50"></Label>
+                    <Label minWidth="10"></Label>
                 </HBox>
                 <HBox alignment="CENTER_LEFT">
                     <children>

@@ -11,7 +11,7 @@ public class Main {
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         ArrayList<Executer> executers = new ArrayList();
 
-        for (int i = 0; i<6;i++){
+        for (int i = 0; i<3;i++){
             executers.add(new Executer(i+1));
         }
 
@@ -23,41 +23,12 @@ public class Main {
         // Wait until all threads are finish
         while (!executorService.isTerminated()) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             }catch (Exception exp){
-
+                System.out.println(" nothing to border");
             }
         }
- /*
-        ParameterAnalysis parameterAnalysis;
-        ParameterAnalysis.stepsEachVarMinusOne = 7;
-        ParameterAnalysis.RunsEachConfigMultiple = 1;
 
-        for (int i = 0;i!=3;i++) {
-            parameterAnalysis = new ParameterAnalysis();
-            parameterAnalysis.EveryImportantParameterAnalyticsCROA("Ackley");
-
-            parameterAnalysis = new ParameterAnalysis();
-            parameterAnalysis.EveryImportantParameterAnalyticsCROA("Rosenbrock");
-
-            parameterAnalysis = new ParameterAnalysis();
-            parameterAnalysis.EveryImportantParameterAnalyticsCROA("Rastirgin");
-        }
-
-        ParameterAnalysis.stepsEachVarMinusOne = 5;
-        ParameterAnalysis.RunsEachConfigMultiple =1;
-        for (int i = 0;i!=3;i++) {
-
-            parameterAnalysis = new ParameterAnalysis();
-            parameterAnalysis.EveryImportantParameterAnalyticsSCROA("Ackley");
-
-            parameterAnalysis = new ParameterAnalysis();
-            parameterAnalysis.EveryImportantParameterAnalyticsSCROA("Rosenbrock");
-
-            parameterAnalysis = new ParameterAnalysis();
-            parameterAnalysis.EveryImportantParameterAnalyticsSCROA("Rastirgin");
-        }
-      */
     }
 
     public static void MultipleParamImportant(){

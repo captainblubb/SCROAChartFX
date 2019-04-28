@@ -25,11 +25,6 @@ public class Decomposition implements IDecomposition {
     @Override
     public List<IMolecule> decomposition(IMolecule molecule) {
 
-        /*
-        double startEnergie = molecule.getKE()+molecule.getPE()+buffer.getBuffer();
-        double bufferStart = buffer.getBuffer();
-        double moleCuleStart = molecule.getKE()+molecule.getPE();
-        */
 
         ArrayList<IMolecule> molecules = new ArrayList<>();
 
@@ -86,13 +81,6 @@ public class Decomposition implements IDecomposition {
                 molecules.add(molecule2);
             }
         }
-
-        /*
-        double endEnergie = molecules.stream().map(m -> m.getPE()+m.getKE()).collect(Collectors.summingDouble(d->d))+buffer.getBuffer();
-        double bufferEnd = buffer.getBuffer();
-        double moleCuleEnd =  molecules.stream().map(m -> m.getPE()+m.getKE()).collect(Collectors.summingDouble(d->d));
-        System.out.println("Decomposition"+startEnergie+" "+endEnergie);
-        */
         return molecules;
     }
 }

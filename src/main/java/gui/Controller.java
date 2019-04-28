@@ -3,14 +3,14 @@ import algorithmns.croa.CROAParamAnalysis;
 import algorithmns.equations.IEquation;
 import algorithmns.equations.Rosenbrock;
 import algorithmns.scroa.SCROAParamAnalysis;
-import configuration.configuration.globalConfig;
+import configuration.configuration.GlobalConfig;
  */
 
 import algorithmns.IAlgorithm;
 import algorithmns.croa.CROA;
 import algorithmns.equations.*;
 import algorithmns.scroa.SCROA;
-import configuration.configuration.globalConfig;
+import configuration.configuration.GlobalConfig;
 import gui.ChartFactory.ChartFactory;
 import gui.comboBoxItems.ComboBoxItem;
 import gui.updateObject.IUpdateable;
@@ -32,7 +32,7 @@ import org.jzy3d.plot3d.builder.Mapper;
 
 import java.util.concurrent.CyclicBarrier;
 
-import static configuration.configuration.globalConfig.csvWriter;
+import static configuration.configuration.GlobalConfig.csvWriter;
 /*import gui.updateObject.IUpdateable;
 import gui.updateObject.UpdateObject;*/
 
@@ -121,7 +121,7 @@ public class Controller implements IUpdateable {
 
                 sliderValue.setText("Iterations: "+sliderValueRounded);
 
-                globalConfig.Iterations = sliderValueRounded;
+                GlobalConfig.Iterations = sliderValueRounded;
             }
         });
 
@@ -133,7 +133,7 @@ public class Controller implements IUpdateable {
         int pointsPerMM = 120;
 
         currentEquation = new Rosenbrock();
-        //globalConfig.ConfigurationAlgorithm = currentEquation.getConfiguration();
+        //GlobalConfig.ConfigurationAlgorithm = currentEquation.getConfiguration();
         mapper = new Mapper() {
             @Override
             public double f(double x, double y) {
@@ -198,7 +198,7 @@ public class Controller implements IUpdateable {
         chartFactory = new gui.ChartFactory.ChartFactory();
         chartFactory2 = new gui.ChartFactory.ChartFactory();
         int pointsPerMM = 80;
-        //globalConfig.ConfigurationAlgorithm = currentEquation.getConfiguration();
+        //GlobalConfig.ConfigurationAlgorithm = currentEquation.getConfiguration();
         mapper = new Mapper() {
             @Override
             public double f(double x, double y) {
@@ -247,7 +247,7 @@ public class Controller implements IUpdateable {
 
             //Cyclic to synchronize both croa and scroa iterations
             cyclicBarrier = new CyclicBarrier(2);
-            //globalConfig.ConfigurationAlgorithm = equation.getConfiguration();
+            //GlobalConfig.ConfigurationAlgorithm = equation.getConfiguration();
 
             croa = new CROA(currentEquation, this, 1, cyclicBarrier);
             scroa = new SCROA(currentEquation, this, 2, cyclicBarrier);
@@ -309,12 +309,12 @@ public class Controller implements IUpdateable {
 
     public void enableLogging(){
 
-        if(globalConfig.loggin==false){
-            globalConfig.loggin=true;
+        if(GlobalConfig.loggin==false){
+            GlobalConfig.loggin=true;
             enableLogging.setText("Logging on");
         }else {
 
-            globalConfig.loggin=false;
+            GlobalConfig.loggin=false;
             enableLogging.setText("Logging off");
         }
     }
@@ -323,7 +323,7 @@ public class Controller implements IUpdateable {
     @Override
     public void update(UpdateObject updateObject) {
 
-            if (updateObject.getIteration() == globalConfig.Iterations) {
+            if (updateObject.getIteration() == GlobalConfig.Iterations) {
                 try {
                     csvWriter.addRecord(Integer.toString(updateObject.getAlgorithmCounter()), Integer.toString(updateObject.getAlgorithmCounter()), ("(" + updateObject.getBestPoint().x + "|" + updateObject.getBestPoint().y + ")"), "" + updateObject.getBestPoint().z);
                 } catch (Exception exp) {
@@ -371,7 +371,7 @@ public class Controller implements IUpdateable {
             }
 
             //Output aller Punkte am Ende
-            if (updateObject.getIteration() == globalConfig.Iterations) {
+            if (updateObject.getIteration() == GlobalConfig.Iterations) {
                 for (int i = 0; i < updateObject.getPoints().size(); i++) {
                     System.out.println(updateObject.getPoints().get(i).toParseFormat());
                 }

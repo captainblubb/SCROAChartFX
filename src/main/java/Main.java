@@ -27,7 +27,7 @@ public class Main extends Application {
             });
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("main.fxml"));
             primaryStage.setTitle("Graphical Evaluation Framework");
-            primaryStage.setScene(new Scene(root, 981, 626));
+            primaryStage.setScene(new Scene(root, 1200, 800));
             primaryStage.show();
             Platform.setImplicitExit(false);
 

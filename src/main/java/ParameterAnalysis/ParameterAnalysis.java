@@ -8,7 +8,6 @@ import algorithmns.equations.Rosenbrock;
 import configuration.configuration.ConfigurationAlgorithm;
 import gui.updateObject.Point3d;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -705,7 +704,7 @@ public class ParameterAnalysis {
             case 15: return "minimumKE";
          */
 
-        stepsEachVarMinusOne = 5;
+        stepsEachVarMinusOne = 7;
         RunsEachConfigMultiple = 6;
         double maxIterations = Math.pow((stepsEachVarMinusOne+1),8)*RunsEachConfigMultiple;
         double currentIteration = 0;
@@ -714,12 +713,20 @@ public class ParameterAnalysis {
 
         for (int a = stepCounter; a <= stepsEachVarMinusOne; a++) {
 
-            System.out.println("SCROA__"+function+"______________Progress :: " + a + "/" + stepsEachVarMinusOne);
+            //  System.out.println("SCROA__"+function+"______________Progress :: " + a + "/" + stepsEachVarMinusOne);
 
             for (int b = stepCounter; b <= stepsEachVarMinusOne; b++) {
 
-                System.out.println("SCROA__"+function+"____________________Sub1Progress :: " + b + "/" + stepsEachVarMinusOne);
+                // System.out.println("SCROA__"+function+"____________________Sub1Progress :: " + b + "/" + stepsEachVarMinusOne);
 
+                CSVWriterParamAnalysis csvWriterParamAnalysisStatus = new CSVWriterParamAnalysis("AnalysisData/MultipleParam/SCROA/"+ function + "/SCROAStatus.csv",1.0);
+
+                try {
+                    csvWriterParamAnalysisStatus.addRecord(function,"SCROA",""+currentIteration+"/"+maxIterations);
+                    csvWriterParamAnalysisStatus.flush();
+                }catch (Exception exp){
+
+                }
                 for (int c = stepCounter; c <= stepsEachVarMinusOne; c++) {
 
                     /*
@@ -735,7 +742,7 @@ public class ParameterAnalysis {
 
                             CSVWriterParamAnalysis csvWriterParamAnalysisSCROA = new CSVWriterParamAnalysis("AnalysisData/MultipleParam/SCROA/" + function + "/SCROAImportantParameter.csv",1);
 
-                            System.out.println("SCROA__"+function+"____Progress "+currentIteration+"/"+maxIterations+" in % "+ ((int)((0.0+currentIteration/0.0+maxIterations)*100.0))+"%");
+                            //  System.out.println("SCROA__"+function+"____Progress "+currentIteration+"/"+maxIterations+" in % "+ ((int)((0.0+currentIteration/0.0+maxIterations)*100.0))+"%");
 
                             ArrayList<SCROAParamAnalysis> SCROAs = new ArrayList<>();
 
@@ -772,7 +779,7 @@ public class ParameterAnalysis {
                                 }
                             }
 
-                            ExecutorService executorService = Executors.newFixedThreadPool(SCROAs.size());
+                            ExecutorService executorService = Executors.newFixedThreadPool(20);
 
 
                             for (int x = 0; x < SCROAs.size(); x++) {
@@ -848,136 +855,98 @@ public class ParameterAnalysis {
         // duration = ((stepsEachVarMinusOne+1)*RunsEachConfigMultiple exp 6 )
 
 
-        stepsEachVarMinusOne = 14;
+        stepsEachVarMinusOne = 15;
         RunsEachConfigMultiple = 6;
 
-        double maxIterations = Math.pow((stepsEachVarMinusOne+1),5)*RunsEachConfigMultiple;
+        double maxIterations = Math.pow((stepsEachVarMinusOne + 1), 5) * RunsEachConfigMultiple;
         double currentIteration = 0;
         for (int a = stepCounter; a <= stepsEachVarMinusOne; a++) {
-            System.out.println("CROA__"+function+"_______________Progress :: " + a + "/" + stepsEachVarMinusOne);
 
             for (int b = stepCounter; b <= stepsEachVarMinusOne; b++) {
 
-                double currentIterationAc = (a)*Math.pow(stepsEachVarMinusOne,5) + (b)*Math.pow(stepsEachVarMinusOne,4);
+                CSVWriterParamAnalysis csvWriterParamAnalysisStatus = new CSVWriterParamAnalysis("AnalysisData2/MultipleParam/CROA/" + function + "/CROAStatus.csv", 1.0);
 
-                System.out.println("CROA__"+function+"____Progress "+currentIterationAc+"/"+maxIterations+" in % "+ ((double)((int)(currentIterationAc/maxIterations)*100)));
+                try {
+                    csvWriterParamAnalysisStatus.addRecord(function, "CROA", "" + currentIteration + "/" + maxIterations);
+                    csvWriterParamAnalysisStatus.flush();
+                } catch (Exception exp) {
+
+                }
 
                 for (int c = stepCounter; c <= stepsEachVarMinusOne; c++) {
 
+                    CSVWriterParamAnalysis csvWriterParamAnalysisCROA = new CSVWriterParamAnalysis("AnalysisData2/MultipleParam/CROA/" + function + "/CROAImportantParameter.csv", 1);
+
+                    ArrayList<CROAParamAnalysis> CROAs = new ArrayList<>();
+
+
                     for (int d = stepCounter; d <= stepsEachVarMinusOne; d++) {
-
-                        CSVWriterParamAnalysis csvWriterParamAnalysisCROA = new CSVWriterParamAnalysis("AnalysisData/MultipleParam/CROA/" + function + "/CROAImportantParameter.csv",1);
-                        //CSVWriterParamAnalysis csvWriterParamAnalysisSCROA = new CSVWriterParamAnalysis("AnalysisData/MultipleParam/SCROA/" + function + "/ParameterAnalysis.csv");
-
-                        ArrayList<CROAParamAnalysis> CROAs = new ArrayList<>();
-                        //ArrayList<SCROAParamAnalysis> SCROAs = new ArrayList<>();
-
-
-                        System.out.println("CROA__"+function+"____Progress "+currentIteration+"/"+maxIterations+" in % "+((int)((0.0+currentIteration/0.0+maxIterations)*100)));
-
                         for (int e = stepCounter; e <= stepsEachVarMinusOne; e++) {
 
-                            for (int f = stepCounter; f <= stepsEachVarMinusOne; f++) {
-                                ConfigurationAlgorithm configurationAlgorithm = new ConfigurationAlgorithm();
-                                configurationAlgorithm = getConfig(1, configurationAlgorithm, (((((double) a) / ((double) stepsEachVarMinusOne)))));
-                                configurationAlgorithm = getConfig(5, configurationAlgorithm, ((((double) b) / ((double) stepsEachVarMinusOne))));
-                                configurationAlgorithm = getConfig(11, configurationAlgorithm, ((((double) c) / ((double) stepsEachVarMinusOne))));
-                                configurationAlgorithm = getConfig(12, configurationAlgorithm, ((((double) d) / ((double) stepsEachVarMinusOne))));
-                                configurationAlgorithm = getConfig(13, configurationAlgorithm, ((((double) e) / ((double) stepsEachVarMinusOne))));
-                                configurationAlgorithm = getConfig(15, configurationAlgorithm, ((((double) f) / ((double) stepsEachVarMinusOne))));
+                            ConfigurationAlgorithm configurationAlgorithm = new ConfigurationAlgorithm();
+                            configurationAlgorithm = getConfig(1, configurationAlgorithm, (((((double) a) / ((double) stepsEachVarMinusOne)))));
+                            configurationAlgorithm = getConfig(11, configurationAlgorithm, ((((double) c) / ((double) stepsEachVarMinusOne))));
+                            configurationAlgorithm = getConfig(12, configurationAlgorithm, ((((double) d) / ((double) stepsEachVarMinusOne))));
+                            configurationAlgorithm = getConfig(13, configurationAlgorithm, ((((double) e) / ((double) stepsEachVarMinusOne))));
+                            configurationAlgorithm = getConfig(15, configurationAlgorithm, ((((double) b) / ((double) stepsEachVarMinusOne))));
 
-                                IEquation equation = getiEquation(function, configurationAlgorithm);
+                            IEquation equation = getiEquation(function, configurationAlgorithm);
 
-                                for (int p = 0; p < RunsEachConfigMultiple; p++) {
-
-                                    CROAParamAnalysis croaParamAnalysis = new CROAParamAnalysis(equation, 1);
-                                    //SCROAParamAnalysis scroaParamAnalysis = new SCROAParamAnalysis(equation, 2);
-
-                                    CROAs.add(croaParamAnalysis);
-                                    //SCROAs.add(scroaParamAnalysis);
-
-                                }
-
-                                currentIteration+=6;
-
-
-                            }
-                        }
-
-                        ExecutorService executorService = Executors.newFixedThreadPool(CROAs.size());
-                        //ExecutorService executorService = Executors.newFixedThreadPool(SCROAs.size());
-
-                        for (int r = 0; r < CROAs.size(); r++) {
-                            executorService.execute(CROAs.get(r));
-                        }
-
-                        /*
-                        for (int x = 0; x < SCROAs.size(); x++) {
-
-                            executorService.execute(SCROAs.get(x));
-                        }*/
-                        executorService.shutdown();
-                        // Wait until all threads are finish
-                        while (!executorService.isTerminated()) {
-
-
-                        }
-
-
-                        for (int q = 0; q < (CROAs.size()/RunsEachConfigMultiple); q++) {
-
-                            int currentElement = q * RunsEachConfigMultiple;
-
-                            double[] values = new double[RunsEachConfigMultiple];
-
-                            for (int i = currentElement; i < (currentElement + RunsEachConfigMultiple); i++) {
-                                values[i - currentElement] = CROAs.get(i).currentBestSolution.getBestPE();
+                            for (int p = 0; p < RunsEachConfigMultiple; p++) {
+                                CROAParamAnalysis croaParamAnalysis = new CROAParamAnalysis(equation, 1);
+                                CROAs.add(croaParamAnalysis);
                             }
 
-                            double median = getMedian(values);
-                            double average = getAverage(values);
+                            currentIteration += 6;
 
-                            try {
-                                csvWriterParamAnalysisCROA.addRecordSpecial(function, "SCROA", CROAs.get(q).equation.getConfiguration(), median, average);
-                            } catch (Exception exp) {
-                                System.out.println("Failed logging record");
-                            }
-                        }
-
-
-                        try {
-                            csvWriterParamAnalysisCROA.flush();
-                        } catch (Exception exp) {
-                            System.out.println("flushing logging record");
-                        }
-
-
-                        /*
-                        for (int q = 0; q < SCROAs.size(); q++) {
-
-                            String point = (new Point3d(SCROAs.get(q).currentBestSolution.getBestSolutionPoint().x, SCROAs.get(q).currentBestSolution.getBestSolutionPoint().y, SCROAs.get(q).currentBestSolution.getBestPE()).toStringNotRounded());
-                            try {
-                                csvWriterParamAnalysisSCROA.addRecord(function, "SCROA", point, "" + SCROAs.get(q).currentBestSolution.getBestPE(), SCROAs.get(q).equation.getConfiguration());
-                            } catch (Exception exp) {
-                                System.out.println("Failed logging record");
-                            }
 
                         }
+                    }
 
-                        try {
+                    ExecutorService executorService = Executors.newFixedThreadPool(41);
 
-                            csvWriterParamAnalysisSCROA.flush();
-                        } catch (Exception exp) {
-                            System.out.println("flushing logging record");
-                        }
-                        */
+                    for (int r = 0; r < CROAs.size(); r++) {
+                        executorService.execute(CROAs.get(r));
+                    }
+
+                    executorService.shutdown();
+                    // Wait until all threads are finish
+                    while (!executorService.isTerminated()) {
+
 
                     }
+
+                    for (int q = 0; q < (CROAs.size() / RunsEachConfigMultiple); q++) {
+
+                        int currentElement = q * RunsEachConfigMultiple;
+
+                        double[] values = new double[RunsEachConfigMultiple];
+
+                        for (int i = currentElement; i < (currentElement + RunsEachConfigMultiple); i++) {
+                            values[i - currentElement] = CROAs.get(i).currentBestSolution.getBestPE();
+                        }
+
+                        double median = getMedian(values);
+                        double average = getAverage(values);
+
+                        try {
+                            csvWriterParamAnalysisCROA.addRecordSpecial(function, "CROA", CROAs.get(q).equation.getConfiguration(), median, average);
+                        } catch (Exception exp) {
+                            System.out.println("Failed logging record");
+                        }
+                    }
+
+
+                    try {
+                        csvWriterParamAnalysisCROA.flush();
+                    } catch (Exception exp) {
+                        System.out.println("flushing logging record");
+                    }
+
                 }
-
             }
-        }
 
+        }
     }
 
 
