@@ -253,7 +253,7 @@ public class CROA implements IAlgorithm {
 
                             while (pause){
                                 try{
-                                    Thread.sleep(200);
+                                    Thread.sleep(5);
                                 }catch (Exception exp){
 
                                 }
@@ -262,7 +262,7 @@ public class CROA implements IAlgorithm {
                         }else if(currentIteration>=GlobalConfig.Iterations) {
                                 //If Thread is finished, wait 200ms -> next Iteration and wait for Stop or iterations are raised....
                                 try{
-                                    Thread.sleep(200);
+                                    Thread.sleep(5);
                                 }catch (Exception exp){
 
                                 }
