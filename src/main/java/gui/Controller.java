@@ -180,7 +180,7 @@ public class Controller implements IUpdateable {
 
     private void initializeComboBox() {
 
-        functionComboBox.getItems().addAll("Rosenbrock","Rastirgin","Ackley","MishrasBird");
+        functionComboBox.getItems().addAll("Rosenbrock","Rastirgin","Ackley");
         //Set the cellFactory property
         functionComboBox.setCellFactory(listview -> new ComboBoxItem());
         // Set Icon as Selections the buttonCell property
