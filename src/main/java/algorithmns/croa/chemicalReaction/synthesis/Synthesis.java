@@ -22,6 +22,8 @@ public class Synthesis implements ISynthesis {
     @Override
     public IMolecule synthesis(IMolecule molecule1, IMolecule molecule2) {
 
+        molecule1.increaseNumberOfHits();
+        molecule2.increaseNumberOfHits();
         double spreadX = randomGenerator.nextDouble();
         double newX = molecule1.getCurrentStructure().x *spreadX + molecule2.getCurrentStructure().x*(1-spreadX);
 

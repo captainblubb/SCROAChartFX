@@ -1,11 +1,4 @@
-package gui;/*
-import algorithmns.croa.CROAParamAnalysis;
-import algorithmns.equations.IEquation;
-import algorithmns.equations.Rosenbrock;
-import algorithmns.scroa.SCROAParamAnalysis;
-import configuration.configuration.GlobalConfig;
- */
-
+package gui;
 import algorithmns.IAlgorithm;
 import algorithmns.croa.CROA;
 import algorithmns.equations.*;
@@ -72,8 +65,10 @@ public class Controller implements IUpdateable {
     @FXML
     private Slider slider;
 
-    volatile IEquation currentEquation;
-    volatile Mapper mapper;
+    volatile IEquation currentEquation1;
+    volatile IEquation currentEquation2;
+    volatile Mapper mapper1;
+    volatile Mapper mapper2;
     volatile ChartFactory chartFactory;
     volatile ChartFactory chartFactory2;
 
@@ -132,20 +127,33 @@ public class Controller implements IUpdateable {
         chartFactory2 = new gui.ChartFactory.ChartFactory();
         int pointsPerMM = 120;
 
-        currentEquation = new Rosenbrock();
+        currentEquation1 = new Rosenbrock("CROA");
+        currentEquation2 = new Rosenbrock("SCROA");
         //GlobalConfig.ConfigurationAlgorithm = currentEquation.getConfiguration();
-        mapper = new Mapper() {
+        mapper1 = new Mapper() {
             @Override
             public double f(double x, double y) {
-                return currentEquation.calculateValue(x,y);
+                return currentEquation1.calculateValue(x,y);
+            }
+        };
+        mapper2 = new Mapper() {
+            @Override
+            public double f(double x, double y) {
+                return currentEquation2.calculateValue(x,y);
             }
         };
 
-        Range xrange = new Range((float)currentEquation.getBoundary().getMinX(), (float)currentEquation.getBoundary().getMaxX());
-        Range yrange = new Range((float)currentEquation.getBoundary().getMinY(), (float)currentEquation.getBoundary().getMaxY());
+        Range xrange1= new Range((float)currentEquation1.getBoundary().getMinX(), (float)currentEquation1.getBoundary().getMaxX());
+        Range yrange1 = new Range((float)currentEquation1.getBoundary().getMinY(), (float)currentEquation1.getBoundary().getMaxY());
+
+        Range xrange2= new Range((float)currentEquation2.getBoundary().getMinX(), (float)currentEquation2.getBoundary().getMaxX());
+        Range yrange2 = new Range((float)currentEquation2.getBoundary().getMinY(), (float)currentEquation2.getBoundary().getMaxY());
+
+
+
         // JavaFX
-        chartLeft = chartFactory.getChart(xrange,yrange, mapper, pointsPerMM,currentEquation.getPercColoring());
-        chartRight = chartFactory2.getChart(xrange,yrange, mapper, pointsPerMM,currentEquation.getPercColoring());
+        chartLeft = chartFactory.getChart(xrange1,yrange1, mapper1, pointsPerMM,currentEquation1.getPercColoring());
+        chartRight = chartFactory2.getChart(xrange2,yrange2, mapper2, pointsPerMM,currentEquation2.getPercColoring());
         chartHBox.getChildren().addAll(chartLeft,chartRight);
 
         chartHBox.setHgrow(chartLeft, Priority.ALWAYS);
@@ -162,16 +170,20 @@ public class Controller implements IUpdateable {
 
             switch (selectedCombo){
 
-                case "Rosenbrock":  currentEquation = new Rosenbrock();
+                case "Rosenbrock":  currentEquation1 = new Rosenbrock("CROA");
+                                    currentEquation2 = new Rosenbrock("SCROA");
                                     break;
 
-                case "Rastirgin" :  currentEquation = new Rastrigin();
+                case "Rastirgin" :  currentEquation1 = new Rastrigin("CROA");
+                                    currentEquation2 = new Rastrigin("SCROA");
                                     break;
 
-                case "Ackley"    :  currentEquation = new Ackley();
+                case "Ackley"    :  currentEquation1 = new Ackley("CROA");
+                                    currentEquation2 = new Ackley("SCROA");
                                     break;
 
-                case "MishrasBird": currentEquation = new MishrasBird();
+                case "MishrasBird": currentEquation1 = new MishrasBird("CROA");
+                                    currentEquation2 = new MishrasBird("SCROA");
                                     break;
             }
             reinitialize();
@@ -197,20 +209,31 @@ public class Controller implements IUpdateable {
         //JZY3D initialize ChartFactory
         chartFactory = new gui.ChartFactory.ChartFactory();
         chartFactory2 = new gui.ChartFactory.ChartFactory();
-        int pointsPerMM = 80;
+        int pointsPerMM = 120;
         //GlobalConfig.ConfigurationAlgorithm = currentEquation.getConfiguration();
-        mapper = new Mapper() {
+        mapper1 = new Mapper() {
             @Override
             public double f(double x, double y) {
-                return currentEquation.calculateValue(x,y);
+                return currentEquation1.calculateValue(x,y);
+            }
+        };
+        mapper2 = new Mapper() {
+            @Override
+            public double f(double x, double y) {
+                return currentEquation2.calculateValue(x,y);
             }
         };
 
-        Range xrange = new Range((float)currentEquation.getBoundary().getMinX(), (float)currentEquation.getBoundary().getMaxX());
-        Range yrange = new Range((float)currentEquation.getBoundary().getMinY(), (float)currentEquation.getBoundary().getMaxY());
+        Range xrange1= new Range((float)currentEquation1.getBoundary().getMinX(), (float)currentEquation1.getBoundary().getMaxX());
+        Range yrange1 = new Range((float)currentEquation1.getBoundary().getMinY(), (float)currentEquation1.getBoundary().getMaxY());
+
+        Range xrange2= new Range((float)currentEquation2.getBoundary().getMinX(), (float)currentEquation2.getBoundary().getMaxX());
+        Range yrange2 = new Range((float)currentEquation2.getBoundary().getMinY(), (float)currentEquation2.getBoundary().getMaxY());
+
+
         // JavaFX
-        chartLeft = chartFactory.getChart(xrange,yrange, mapper, pointsPerMM,currentEquation.getPercColoring());
-        chartRight = chartFactory2.getChart(xrange,yrange, mapper, pointsPerMM,currentEquation.getPercColoring());
+        chartLeft = chartFactory.getChart(xrange1,yrange1, mapper1, pointsPerMM,currentEquation1.getPercColoring());
+        chartRight = chartFactory2.getChart(xrange2,yrange2, mapper2, pointsPerMM,currentEquation2.getPercColoring());
 
         chartFactory.showSurface(showSurface);
         chartFactory2.showSurface(showSurface);
@@ -249,8 +272,9 @@ public class Controller implements IUpdateable {
             cyclicBarrier = new CyclicBarrier(2);
             //GlobalConfig.ConfigurationAlgorithm = equation.getConfiguration();
 
-            croa = new CROA(currentEquation, this, 1, cyclicBarrier);
-            scroa = new SCROA(currentEquation, this, 2, cyclicBarrier);
+
+            croa = new CROA(currentEquation1, this, 1, cyclicBarrier);
+            scroa = new SCROA(currentEquation2, this, 2, cyclicBarrier);
 
             worker = new Thread(croa);
             worker2 = new Thread(scroa);
@@ -359,16 +383,6 @@ public class Controller implements IUpdateable {
             System.out.println("Update Received Best point of algorithmn " + updateObject.getAlgorithmCounter()
                     + " : Iteration: " + updateObject.getIteration() + " " + updateObject.getBestPoint().toParseFormat()
                     + " Population count : " + updateObject.getPoints().size());
-
-
-            for (int i = 0; i < updateObject.getPoints().size(); i++) {
-                if (updateObject.getPoints().get(i).x >= currentEquation.getBoundary().getMaxX()
-                        || updateObject.getPoints().get(i).y >= currentEquation.getBoundary().getMaxY()
-                        || updateObject.getPoints().get(i).x <= currentEquation.getBoundary().getMinX()
-                        || updateObject.getPoints().get(i).y <= -currentEquation.getBoundary().getMaxY()) {
-                    System.out.println("Bad Point in ALgo" + updateObject.getAlgorithmCounter() + " : " + updateObject.getPoints().get(i).toParseFormat());
-                }
-            }
 
             //Output aller Punkte am Ende
             if (updateObject.getIteration() == GlobalConfig.Iterations) {

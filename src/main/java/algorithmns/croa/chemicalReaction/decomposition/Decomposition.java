@@ -26,6 +26,7 @@ public class Decomposition implements IDecomposition {
     public List<IMolecule> decomposition(IMolecule molecule) {
 
 
+        molecule.increaseNumberOfHits();
         ArrayList<IMolecule> molecules = new ArrayList<>();
 
         Boundary boundary = molecule.getEquation().getBoundary();

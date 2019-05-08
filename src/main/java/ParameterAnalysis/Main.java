@@ -9,10 +9,10 @@ public class Main {
     public static void main(String[] args){
 
         ExecutorService executorService = Executors.newFixedThreadPool(6);
-        ArrayList<Executer> executers = new ArrayList();
+        ArrayList<Executer2> executers = new ArrayList();
 
         for (int i = 0; i<3;i++){
-            executers.add(new Executer(i+1));
+            executers.add(new Executer2(i+1));
         }
 
         for (int r = 0; r < executers.size(); r++) {
@@ -28,7 +28,6 @@ public class Main {
                 System.out.println(" nothing to border");
             }
         }
-
     }
 
     public static void MultipleParamImportant(){

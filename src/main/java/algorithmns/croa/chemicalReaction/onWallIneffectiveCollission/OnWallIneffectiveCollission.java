@@ -28,6 +28,8 @@ public class OnWallIneffectiveCollission implements IOnWallIneffectiveCollission
 
         Point newPoint =  neighbourhoodSearchSingle.findNeighbour(molecule.getCurrentStructure());
 
+        molecule.increaseNumberOfHits();
+
         int counter = 0;
         while (newPoint == null && counter < 20){
             newPoint =  neighbourhoodSearchSingle.findNeighbour(molecule.getCurrentStructure());

@@ -40,14 +40,14 @@ public class ParameterAnalysis {
     private double impactOfOtherMolecule = 0.185;
 
     //dynamicly modified
-    private static int PopSizeMin = 5;
-    private static int PopSizeMax = 100;
-    private double c1Min = 0;
-    private double c1Max = 2;
-    private double c2Min = 0;
-    private double c2Max = 2;
-    private double wMin = 0.0;
-    private double wMax = 1;
+    private static int PopSizeMin = 6;
+    private static int PopSizeMax = 99;
+    private double c1Min = 0.1;
+    private double c1Max = 2.1;
+    private double c2Min = 0.1;
+    private double c2Max = 2.1;
+    private double wMin = 0.05;
+    private double wMax = 0.95;
     private double maxVelocityMin = 0;
     private double maxVelocityMax = 25;
     private double initialMaxLengthVelocityPerDimMin = 3;
@@ -383,6 +383,149 @@ public class ParameterAnalysis {
     }
 
 
+    public void ProofOfConcept(String function, int amountOfRecords, String algorithmn){
+
+        stepCounter = 1;
+        int innerCount = Runtime.getRuntime().availableProcessors()*10;
+
+        int innerLoop = innerCount;
+        int outerLoop = amountOfRecords!= 0? (int)((double)amountOfRecords/(double)innerCount) : 0;
+
+        for (int i = 0; i <=outerLoop; i++){
+
+            System.out.println("Process: "+i+"/"+outerLoop);
+
+            stepCounter%=stepsEachVarMinusOne;
+            stepCounter++;
+            CSVWriterParamAnalysis csvWriterParamAnalysisCROA=null;
+            CSVWriterParamAnalysis csvWriterParamAnalysisSCROA=null;
+            CSVWriterParamAnalysis csvWriterParamAnalysisPSO = null;
+
+            if(algorithmn.equals("CROA")) {
+                csvWriterParamAnalysisCROA = new CSVWriterParamAnalysis("AnalysisData/ProofOfConcept/CROA/" + function + "/"+function+"_"+algorithmn+"_ProofOfConcept.csv");
+            }
+
+            if (algorithmn.equals("SCROA")) {
+                csvWriterParamAnalysisSCROA = new CSVWriterParamAnalysis("AnalysisData/ProofOfConcept/SCROA/" + function + "/"+function+"_"+algorithmn+"_ProofOfConcept.csv");
+            }
+
+            if(algorithmn.equals("PSO")){
+                csvWriterParamAnalysisPSO = new CSVWriterParamAnalysis("AnalysisData/ProofOfConcept/PSO/" + function + "/"+function+"_"+algorithmn+"_ProofOfConcept.csv");
+            }
+
+
+            ArrayList<CROAParamAnalysis> CROAs = new ArrayList<>();
+            ArrayList<SCROAParamAnalysis> SCROAs = new ArrayList<>();
+            ArrayList<PSOParamAnalysis> PSOs = new ArrayList<>();
+
+            IEquation equation = getiEquation(function,algorithmn);
+
+            for (int k = 0; k<innerLoop;k++){
+
+
+                if (algorithmn.equals("CROA")) {
+                    CROAParamAnalysis croaParamAnalysis = new CROAParamAnalysis(equation, 1);
+                    CROAs.add(croaParamAnalysis);
+
+                }else if (algorithmn.equals("SCROA")){
+
+                    SCROAParamAnalysis scroaParamAnalysis = new SCROAParamAnalysis(equation,2);
+                    SCROAs.add(scroaParamAnalysis);
+
+                }else if (algorithmn.equals("PSO")){
+
+                    PSOParamAnalysis psoParamAnalysis = new PSOParamAnalysis(equation,3);
+                    PSOs.add(psoParamAnalysis);
+                }
+
+            }
+
+
+            ExecutorService executorService = Executors.newFixedThreadPool(50);
+
+            for (int n =0; n <CROAs.size();n++){
+                executorService.execute(CROAs.get(n));
+            }
+
+            for (int k = 0; k <SCROAs.size(); k++) {
+
+                executorService.execute(SCROAs.get(k));
+            }
+            executorService.shutdown();
+            // Wait until all threads are finish
+            while (!executorService.isTerminated()) {
+
+            }
+
+
+            if (algorithmn.equals("CROA")) {
+                for (int n = 0; n < CROAs.size(); n++) {
+
+                    String point = (new Point3d(CROAs.get(n).currentBestSolution.getBestSolutionPoint().x, CROAs.get(n).currentBestSolution.getBestSolutionPoint().y, CROAs.get(n).currentBestSolution.getBestPE()).toStringNotRounded());
+
+                    try {
+
+                        csvWriterParamAnalysisCROA.addRecord(function, "CROA", point, "" + CROAs.get(n).currentBestSolution.getBestPE(), CROAs.get(n).equation.getConfiguration());
+
+                    } catch (Exception exp) {
+                        System.out.println("Failed logging record");
+                    }
+                }
+
+                try {
+
+                    csvWriterParamAnalysisCROA.flush();
+                } catch (Exception exp) {
+                    System.out.println("ERROR: flushing logging record");
+                }
+
+            }
+
+            if (algorithmn.equals("SCROA")) {
+                for (int k = 0; k < SCROAs.size(); k++) {
+
+                    String point = (new Point3d(SCROAs.get(k).currentBestSolution.getBestSolutionPoint().x, SCROAs.get(k).currentBestSolution.getBestSolutionPoint().y, SCROAs.get(k).currentBestSolution.getBestPE()).toStringNotRounded());
+                    try {
+                        csvWriterParamAnalysisSCROA.addRecord(function, "SCROA", point, "" + SCROAs.get(k).currentBestSolution.getBestPE(), SCROAs.get(k).equation.getConfiguration());
+                    } catch (Exception exp) {
+                        System.out.println("Failed logging record");
+                    }
+
+                }
+
+                try {
+
+                    csvWriterParamAnalysisSCROA.flush();
+                } catch (Exception exp) {
+                    System.out.println("ERROR: flushing logging record");
+                }
+            }
+
+            if (algorithmn.equals("PSO")) {
+                for (int k = 0; k < PSOs.size(); k++) {
+
+                    String point = (new Point3d(PSOs.get(k).currentBestSolution.getBestSolutionPoint().x, PSOs.get(k).currentBestSolution.getBestSolutionPoint().y, PSOs.get(k).currentBestSolution.getBestPE()).toStringNotRounded());
+                    try {
+                        csvWriterParamAnalysisPSO.addRecord(function, "PSO", point, "" + PSOs.get(k).currentBestSolution.getBestPE(), PSOs.get(k).equation.getConfiguration());
+                    } catch (Exception exp) {
+                        System.out.println("Failed logging record");
+                    }
+
+                }
+
+                try {
+
+                    csvWriterParamAnalysisPSO.flush();
+                } catch (Exception exp) {
+                    System.out.println("ERROR: flushing logging record");
+                }
+            }
+
+        }
+
+    }
+
+
     public void EveryImportantParameterAnalyticsSCROA(String function) {
 
         //Configs: 1,2,3,4,11,12,13,15
@@ -681,6 +824,24 @@ public class ParameterAnalysis {
         return equation;
     }
 
+    private IEquation getiEquation(String function, String algorithmn) {
+        IEquation equation = new Rastrigin(algorithmn);
+
+        switch (function) {
+
+            case "Rastirgin":
+                equation = new Rastrigin(algorithmn);
+                break;
+            case "Ackley":
+                equation = new Ackley(algorithmn);
+                break;
+            case "Rosenbrock":
+                equation = new Rosenbrock(algorithmn);
+                break;
+
+        }
+        return equation;
+    }
 
     public void EveryImportantParameterAnalyticsSCROAWithMedian(String function) {
 
@@ -855,7 +1016,7 @@ public class ParameterAnalysis {
         // duration = ((stepsEachVarMinusOne+1)*RunsEachConfigMultiple exp 6 )
 
 
-        stepsEachVarMinusOne = 15;
+        stepsEachVarMinusOne = 16;
         RunsEachConfigMultiple = 6;
 
         double maxIterations = Math.pow((stepsEachVarMinusOne + 1), 5) * RunsEachConfigMultiple;
@@ -949,6 +1110,128 @@ public class ParameterAnalysis {
         }
     }
 
+    public void EveryImportantParameterAnalyticsPSOWithMedian(String function) {
+
+        //1,11,12,13,15
+
+        /*
+            case 1: return "popSize";
+            case 2: return "c1";
+            case 3: return "c2";
+            case 4: return "w";
+                     case 5: return "impactOfOtherMolecule";
+                     case 6: return "initalBuffer";
+                     case 7: return "initalKE";
+                     case 8: return "minVelocityStep";
+                     case 9: return "maxLengthVelocityPerDimInitial";
+                     case 10: return "maxVelocity";
+                     case 11: return "minKELossRate";
+                     case 12: return "moleColl";
+                     case 13: return "numberOfHitsForDecomp";
+                     case 14: return "moveAlongGradeMaxStep";
+                     case 15: return "minimumKE";
+
+         */
+        // duration = ((stepsEachVarMinusOne+1)*RunsEachConfigMultiple exp 6 )
+
+
+        stepsEachVarMinusOne = 10;
+        RunsEachConfigMultiple = 6;
+
+        double maxIterations = Math.pow((stepsEachVarMinusOne + 1), 4) * RunsEachConfigMultiple;
+        double currentIteration = 0;
+        for (int a = stepCounter; a <= stepsEachVarMinusOne; a++) {
+
+            for (int b = stepCounter; b <= stepsEachVarMinusOne; b++) {
+
+                CSVWriterParamAnalysis csvWriterParamAnalysisStatus = new CSVWriterParamAnalysis("AnalysisData2/MultipleParam/PSO/" + function + "/PSOStatus.csv", 1.0);
+
+                try {
+                    csvWriterParamAnalysisStatus.addRecord(function, "PSO", "" + currentIteration + "/" + maxIterations);
+                    csvWriterParamAnalysisStatus.flush();
+                } catch (Exception exp) {
+
+                }
+
+                System.out.println(function + " PSO "+currentIteration+" / "+maxIterations);
+
+                for (int c = stepCounter; c <= stepsEachVarMinusOne; c++) {
+
+                    CSVWriterParamAnalysis csvWriterParamAnalysisPSO = new CSVWriterParamAnalysis("AnalysisData2/MultipleParam/PSO/" + function + "/PSOImportantParameter.csv", 1);
+
+                    ArrayList<PSOParamAnalysis> PSOs = new ArrayList<>();
+
+                    for (int d = stepCounter; d <= stepsEachVarMinusOne; d++) {
+
+                        ConfigurationAlgorithm configurationAlgorithm = new ConfigurationAlgorithm();
+                        configurationAlgorithm = getConfig(1, configurationAlgorithm, (((((double) a) / ((double) stepsEachVarMinusOne)))));
+                        configurationAlgorithm = getConfig(2, configurationAlgorithm, ((((double) b) / ((double) stepsEachVarMinusOne))));
+                        configurationAlgorithm = getConfig(3, configurationAlgorithm, ((((double) c) / ((double) stepsEachVarMinusOne))));
+                        configurationAlgorithm = getConfig(4, configurationAlgorithm, ((((double) d) / ((double) stepsEachVarMinusOne))));
+
+                        IEquation equation = getiEquation(function, configurationAlgorithm);
+                        for (int p = 0; p < RunsEachConfigMultiple; p++) {
+                            PSOParamAnalysis psoParamAnalysis = new PSOParamAnalysis(equation, 3);
+                            PSOs.add(psoParamAnalysis);
+                        }
+
+                        currentIteration += 6;
+
+                        ExecutorService executorService = Executors.newFixedThreadPool(41);
+
+                        for (int r = 0; r < PSOs.size(); r++) {
+                            executorService.execute(PSOs.get(r));
+                        }
+
+                        executorService.shutdown();
+                        // Wait until all threads are finish
+                        while (!executorService.isTerminated()) {
+
+
+                        }
+
+                        for (int q = 0; q < (PSOs.size() / RunsEachConfigMultiple); q++) {
+
+                            int currentElement = q * RunsEachConfigMultiple;
+
+                            double[] values = new double[RunsEachConfigMultiple];
+
+                            for (int i = currentElement; i < (currentElement + RunsEachConfigMultiple); i++) {
+                                values[i - currentElement] = PSOs.get(i).currentBestSolution.getBestPE();
+                            }
+
+                            double median = getMedian(values);
+                            double average = getAverage(values);
+
+                            try {
+                                csvWriterParamAnalysisPSO.addRecordSpecial(function, "PSO", configurationAlgorithm, median, average);
+                            } catch (Exception exp) {
+                                System.out.println("Failed logging record");
+                            }
+                        }
+
+
+                        try {
+                            csvWriterParamAnalysisPSO.flush();
+                        } catch (Exception exp) {
+                            System.out.println("flushing logging record");
+                        }
+                    }
+
+                }
+            }
+
+        }
+    }
+
+
+    public void ProofOfConceptCROA(String function){
+
+    }
+
+    public void ProofOfConceptSCROA(String function){
+
+    }
 
     private double getMedian(double[] numArray){
         Arrays.sort(numArray);
@@ -1142,7 +1425,6 @@ public class ParameterAnalysis {
         }
     }
 
-
     //####Configurations#########
     private ConfigurationAlgorithm getdefaultConfiguration(){
 
@@ -1168,8 +1450,6 @@ public class ParameterAnalysis {
         return configurationAlgorithm;
 
     }
-
-
 
     //overgiven with 1 Modified
     public ConfigurationAlgorithm getConfigPopSize(ConfigurationAlgorithm configurationAlgorithm, double factor){
@@ -1249,7 +1529,6 @@ public class ParameterAnalysis {
         configurationAlgorithm.numberOfHitsForDecomposition= numberOfHitsForDecomposition;
         return configurationAlgorithm;
     }
-
 
     public ConfigurationAlgorithm getConfigmoveAlongGradeMaxStep(ConfigurationAlgorithm configurationAlgorithm, double factor){
         double moveAlongGradeMaxStep=moveAlongGradeMaxStepMin+((-moveAlongGradeMaxStepMin+moveAlongGradeMaxStepMax)*(factor));
@@ -1354,7 +1633,6 @@ public class ParameterAnalysis {
         configurationAlgorithm.numberOfHitsForDecomposition= numberOfHitsForDecomposition;
         return configurationAlgorithm;
     }
-
 
     public ConfigurationAlgorithm getConfigmoveAlongGradeMaxStep(){
         ConfigurationAlgorithm configurationAlgorithm = getdefaultConfiguration();

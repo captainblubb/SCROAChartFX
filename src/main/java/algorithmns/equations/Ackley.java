@@ -12,7 +12,8 @@ public class Ackley implements IEquation {
     Boundary boundary;
     ConfigurationAlgorithm configurationAlgorithm;
 
-    public Ackley(){
+    @Deprecated
+    private Ackley(){
         boundary = new Boundary(-5.00,5.00,-5.00,5.00);
         configurationAlgorithm = new ConfigurationAlgorithm(
                 1.4962, //c1
@@ -40,34 +41,58 @@ public class Ackley implements IEquation {
     }
 
     public Ackley(String algorithmn){
-
+        boundary = new Boundary(-5.00,5.00,-5.00,5.00);
         if (algorithmn.equals("CROA")){
 
             configurationAlgorithm = new ConfigurationAlgorithm(
-                    1.4962, //c1
-                    1.4963, //c2
-                    0.72984,//w
-                    10,    //maxVelocity
-                    2,     //initialMaxLengthVelocityPerDim
-                    0.3,   //minVelocityStepInPerCent
-                    10,    //trysOfPSOUpdate
-                    0.05,  //distaneToBoundrys
-                    0.1,   //keMinLossRate
-                    0.7,   //moleColl %
+                    0, //c1
+                    0, //c2
+                    0,//w
+                    0,    //maxVelocity
+                    0,     //initialMaxLengthVelocityPerDim
+                    0,   //minVelocityStepInPerCent
+                    0,    //trysOfPSOUpdate
+                    0.00,  //distaneToBoundrys
+                    0.2,   //keMinLossRate
+                    0.36,   //moleColl %
                     20.0,  //initialKE
-                    2.0,   //minimumKE
-                    0.0,   //initialBuffer
-                    50,    //numberOfHitsForDecomposition
-                    0.0000001, //MoveAlonGradeMaxStep);
-                    0.00005,50); //
+                    16.0,   //minimumKE
+                    2000.0,   //initialBuffer
+                    22,    //numberOfHitsForDecomposition
+                    0.0992, //MoveAlonGradeMaxStep);
+                    0.097,
+                    24); //
 
         }else if (algorithmn.equals("SCROA")){
 
             configurationAlgorithm = new ConfigurationAlgorithm(
-                    1.4962, //c1
-                    1.4963, //c2
-                    0.72984,//w
-                    10,    //maxVelocity
+                    0.0, //c1
+                    0.28, //c2
+                    0.28,//w
+                    10000,    //maxVelocity
+                    3,     //initialMaxLengthVelocityPerDim
+                    0,   //minVelocityStepInPerCent
+                    1,    //trysOfPSOUpdate
+                    0.05,  //distaneToBoundrys
+                    0.1429,   //keMinLossRate
+                    0.7,   //moleColl %
+                    50.0,  //initialKE
+                    14.6,   //minimumKE
+                    2500.0,   //initialBuffer
+                    40,    //numberOfHitsForDecomposition
+                    0.0667, //MoveAlonGradeMaxStep);
+                    0.078,72); //
+        }else if(algorithmn.equals("PSO")){
+
+            //Rastirgin 1.212 0.644 0.712 71
+            //Ackley 0.0 0.8 0.688 90
+            //Rosenbrock 0.2 1.6 0.5 33
+            boundary = new Boundary(-5.00,5.00,-5.00,5.00);
+            configurationAlgorithm = new ConfigurationAlgorithm(
+                    0.242, //c1
+                    0.806, //c2
+                    0.688,//w
+                    (boundary.getMaxY()-(boundary.getMinY())*0.1),    //maxVelocity
                     2,     //initialMaxLengthVelocityPerDim
                     0.3,   //minVelocityStepInPerCent
                     10,    //trysOfPSOUpdate
@@ -79,7 +104,8 @@ public class Ackley implements IEquation {
                     0.0,   //initialBuffer
                     50,    //numberOfHitsForDecomposition
                     0.0000001, //MoveAlonGradeMaxStep);
-                    0.00005,50); //
+                    0.00005,71); //
+
         }
     }
 
