@@ -67,9 +67,9 @@ public class Rastrigin implements IEquation {
         }else if (algorithmn.equals("SCROA")){
 
             configurationAlgorithm = new ConfigurationAlgorithm(
-                    0.125, //c1
-                    0.286, //c2
-                    0.345,//w
+                    1.425, //c1
+                    1.423, //c2
+                    0.845,//w
                     1000,    //maxVelocity
                     3,     //initialMaxLengthVelocityPerDim
                     0.0,   //minVelocityStepInPerCent

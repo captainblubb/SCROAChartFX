@@ -133,6 +133,7 @@ public class ChartFactory {
 
         OrthonormalGrid orthonormalGrid = new OrthonormalGrid(xRange,120, yRange,120);
 
+
         final Shape surface = Builder.buildOrthonormal(orthonormalGrid,mapper);
 
         //Expand bounds by 10%
@@ -158,6 +159,7 @@ public class ChartFactory {
         //HeatColor
         surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), zNegative , (zRange)*coloringPerc, new Color(1, 1, 1, 0.7f)));
         surface.setFaceDisplayed(true);
+        surface.setBoundingBoxDisplayed(false);
         surface.setWireframeDisplayed(false);
         surface.setLegendDisplayed(false);
         surface.setBoundingBoxDisplayed(false);
@@ -171,17 +173,25 @@ public class ChartFactory {
         //quality.setAnimated(true);
 
         // let factory bind mouse and keyboard controllers to JavaFX node
-
         AWTChart chart = (AWTChart) factory.newChart(quality, toolkit);
         chart.getScene().getGraph().add(surface);
         return chart;
     }
 
+    private volatile int toggleAxes = 0;
 
     public void showSurface(boolean showSurfaceBool){
         try {
             currSurface.setFaceDisplayed(showSurfaceBool);
             chart.updateProjectionsAndRender();
+            if (toggleAxes == 1 || toggleAxes == 2) {
+                chart.setAxeDisplayed(false);
+                toggleAxes%=4;
+            }else {
+                chart.setAxeDisplayed(true);
+                toggleAxes%=4;
+            }
+            toggleAxes++;
         }catch (Exception exp){
 
         }

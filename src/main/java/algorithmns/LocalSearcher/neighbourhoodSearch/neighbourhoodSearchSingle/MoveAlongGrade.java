@@ -33,15 +33,15 @@ public class MoveAlongGrade implements INeighbourhoodSearchSingle {
 
         //Wenn der Vector kleiner 1 ist soll er nicht normalisiert werden => Länge auf 1 gesetzt werden
         if(vectorLength<1.0) {
-            vectorLength = 1;
+            vectorLength = 1.0;
         }
 
         // 0...1
          double factor = randomGenerator.nextDouble() * equation.getConfiguration().moveAlongGradeMaxStep;
 
         //Faktor * Richtung der Steigung
-        newX += grade.x * (1 / vectorLength) * factor;
-        newY += grade.y * (1 / vectorLength) * factor;
+        newX += grade.x * (1.0 / (double)vectorLength) * factor;
+        newY += grade.y * (1.0 / (double)vectorLength) * factor;
 
 
         if (equation.getBoundary().inBoundary(newX,newY)){

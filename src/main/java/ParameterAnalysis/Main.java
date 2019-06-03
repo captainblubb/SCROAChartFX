@@ -11,7 +11,7 @@ public class Main {
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         ArrayList<Executer2> executers = new ArrayList();
 
-        for (int i = 0; i<3;i++){
+        for (int i = 0; i<9;i++){
             executers.add(new Executer2(i+1));
         }
 

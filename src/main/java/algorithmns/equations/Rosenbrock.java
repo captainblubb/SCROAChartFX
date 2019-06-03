@@ -116,18 +116,18 @@ public class Rosenbrock implements IEquation{
 
     //return result for f(x,y)
     public double calculateValue(Point point) {
-        return (Math.pow((0.0-point.x),2.0)+ 105.0*(Math.pow(point.y-Math.pow(point.x,2),2)));
+        return (Math.pow((1.0-point.x),2.0)+ 105.0*(Math.pow(point.y-Math.pow(point.x,2),2)));
     }
 
     @Override
     public double calculateValue(double x, double y) {
-        return (Math.pow((0.0-x),2.0)+ 105.0*(Math.pow(y-Math.pow(x,2),2)));
+        return (Math.pow((1.0-x),2.0)+ 105.0*(Math.pow(y-Math.pow(x,2),2)));
     }
 
     //Calculate direction to move
     public Point calculateGrade(Point point) {
-        double GradInX = 2.0*point.x*(200.0 * Math.pow(point.x,2.0) - 200.0 * point.y + 1.0);
-        double GradInY = 200.0*(point.y - Math.pow(point.x,2.0));
+        double GradInX =-( 2.0*point.x*(200.0 * Math.pow(point.x,2.0) - 200.0 * point.y + 1.0));
+        double GradInY = -(200.0*(point.y - Math.pow(point.x,2.0)));
         return new Point(GradInX,GradInY);
     }
 

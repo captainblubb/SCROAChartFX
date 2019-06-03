@@ -31,13 +31,12 @@ public class OnWallIneffectiveCollission implements IOnWallIneffectiveCollission
         molecule.increaseNumberOfHits();
 
         int counter = 0;
-        while (newPoint == null && counter < 20){
+        while (newPoint == null && counter < 5){
             newPoint =  neighbourhoodSearchSingle.findNeighbour(molecule.getCurrentStructure());
             counter++;
         }
 
         if (newPoint!=null) {
-
 
             if(molecule.getPE()+molecule.getKE() > molecule.getEquation().calculateValue(newPoint)) {
                 //der neue Punkt entspreicht den vorraussetzungen :
