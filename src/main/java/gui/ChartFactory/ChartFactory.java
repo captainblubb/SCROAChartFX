@@ -251,6 +251,26 @@ public class ChartFactory {
 
     }
 
+
+    //TODO Delete, To create Charts only
+    public synchronized void setPointsInChart(List<Point> points3d){
+
+        try {
+
+
+            chart.getScene().getGraph().add(points3d);
+            //chart.getScene().getGraph().add(sphere);
+            chart.render();
+
+
+        }catch (Exception exp){
+
+            System.out.println("Exception: in update Chart method"+exp.toString());
+            exp.printStackTrace();
+        }
+
+    }
+
     //Löscht alle Punkte aus einem Chart
     public void clearPoints(){
 

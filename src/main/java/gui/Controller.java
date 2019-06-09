@@ -158,6 +158,9 @@ public class Controller implements IUpdateable {
 
         chartHBox.setHgrow(chartLeft, Priority.ALWAYS);
         chartHBox.setHgrow(chartRight,Priority.ALWAYS);
+
+
+
     }
 
 
@@ -363,6 +366,13 @@ public class Controller implements IUpdateable {
              *
              */
         Platform.runLater(() -> {
+
+            if (updateObject.getAlgorithmCounter() == 1) {
+                chartFactory.updatePointsInChart(updateObject.getPoints());
+            } else if (updateObject.getAlgorithmCounter() == 2) {
+                chartFactory2.updatePointsInChart(updateObject.getPoints());
+            }
+
             if (updateObject.getAlgorithmCounter() == 1) {
 
                 label_Algo1.setText("CROAParamAnalysis best solution: " + updateObject.getBestPoint().toString() );
@@ -391,11 +401,6 @@ public class Controller implements IUpdateable {
                 }
             }
 
-            if (updateObject.getAlgorithmCounter() == 1) {
-                chartFactory.updatePointsInChart(updateObject.getPoints());
-            } else if (updateObject.getAlgorithmCounter() == 2) {
-                chartFactory2.updatePointsInChart(updateObject.getPoints());
-            }
     }
 
 

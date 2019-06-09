@@ -16,7 +16,7 @@ public class Rosenbrock implements IEquation{
 
     @Deprecated
     public Rosenbrock(){
-        this.boundary = new Boundary(-2.5,2.5,-2.5,2.5);
+        this.boundary = new Boundary(-5.12,5.12,-5.12,5.12);
         configurationAlgorithm = new ConfigurationAlgorithm(
                 1.4962, //c1
                 1.4962, //c2
@@ -42,7 +42,7 @@ public class Rosenbrock implements IEquation{
     }
 
    public Rosenbrock(String algorithmn){
-       this.boundary = new Boundary(-2.5,2.5,-2.5,2.5);
+       this.boundary = new Boundary(-5.12,5.12,-5.12,5.12);
 
        if (algorithmn.equals("CROA")){
 
@@ -87,7 +87,7 @@ public class Rosenbrock implements IEquation{
         //Rastirgin 1.212 0.644 0.712 71
         //Ackley 0.0 0.8 0.688 90
         //Rosenbrock 0.2 1.6 0.5 33
-           boundary = new Boundary(-5.00,5.00,-5.00,5.00);
+           this.boundary = new Boundary(-5.12,5.12,-5.12,5.12);
            configurationAlgorithm = new ConfigurationAlgorithm(
                    0.226, //c1
                    1.616, //c2

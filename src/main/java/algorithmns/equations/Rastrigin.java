@@ -148,7 +148,7 @@ public class Rastrigin implements IEquation {
 
     @Override
     public Boundary getBoundary() {
-        return boundary;
+        return new Boundary(-5.12,5.12,-5.12,5.12);
     }
 
     @Override
