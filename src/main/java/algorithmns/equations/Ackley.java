@@ -22,10 +22,10 @@ public class Ackley implements IEquation {
                 (boundary.getMaxY()-(boundary.getMinY())*0.1),    //maxVelocity
                 2,     //initialMaxLengthVelocityPerDim
                 0.3,   //minVelocityStepInPerCent
-                10,    //trysOfPSOUpdate
+                1,    //trysOfPSOUpdate
                 0.05,  //distaneToBoundrys
                 0.1,   //keMinLossRate
-                0.7,   //moleColl %
+                0.6,   //moleColl %
                 20.0,  //initialKE
                 2.0,   //minimumKE
                 0.0,   //initialBuffer
@@ -53,15 +53,15 @@ public class Ackley implements IEquation {
                     0,   //minVelocityStepInPerCent
                     0,    //trysOfPSOUpdate
                     0.00,  //distaneToBoundrys
-                    0.2,   //keMinLossRate
-                    0.36,   //moleColl %
+                    0.1,   //keMinLossRate
+                    0.56,   //moleColl %
                     20.0,  //initialKE
-                    16.0,   //minimumKE
+                    5.0,   //minimumKE
                     2000.0,   //initialBuffer
-                    22,    //numberOfHitsForDecomposition
+                    33,    //numberOfHitsForDecomposition
                     0.0992, //MoveAlonGradeMaxStep);
                     0.097,
-                    24); //
+                    120); //
 
         }else if (algorithmn.equals("SCROA")){
 

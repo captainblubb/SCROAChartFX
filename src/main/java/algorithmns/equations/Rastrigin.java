@@ -57,12 +57,12 @@ public class Rastrigin implements IEquation {
                     0.12,   //keMinLossRate
                     0.6,   //moleColl %
                     33.4,  //initialKE
-                    16.2,   //minimumKE
+                    3.2,   //minimumKE
                     1350.0,   //initialBuffer
-                    22,    //numberOfHitsForDecomposition
+                    36,    //numberOfHitsForDecomposition
                     0.186, //MoveAlonGradeMaxStep);
                     0.177,
-                    24); //
+                    150); //
 
         }else if (algorithmn.equals("SCROA")){
 
@@ -83,6 +83,7 @@ public class Rastrigin implements IEquation {
                     16,    //numberOfHitsForDecomposition
                     0.216, //MoveAlonGradeMaxStep);
                     0.065,43); //
+
         }else if (algorithmn.equals("PSO")){
             //Rastirgin 1.212 0.644 0.712 71
             //Ackley 0.0 0.8 0.688 90

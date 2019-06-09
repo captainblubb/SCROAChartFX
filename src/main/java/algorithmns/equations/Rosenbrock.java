@@ -62,7 +62,7 @@ public class Rosenbrock implements IEquation{
                    1750,   //initialBuffer
                    1,    //numberOfHitsForDecomposition
                    0.216, //MoveAlonGradeMaxStep);
-                   0.167,18); //
+                   0.167,55); //
 
        }else if (algorithmn.equals("SCROA")){
 
@@ -82,7 +82,7 @@ public class Rosenbrock implements IEquation{
                    3250.0,   //initialBuffer
                    20,    //numberOfHitsForDecomposition
                    0.067, //MoveAlonGradeMaxStep);
-                   0.089,5); //
+                   0.089,45); //
        }else if (algorithmn.equals("PSO")){
         //Rastirgin 1.212 0.644 0.712 71
         //Ackley 0.0 0.8 0.688 90

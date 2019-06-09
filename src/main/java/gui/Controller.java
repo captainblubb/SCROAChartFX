@@ -1,4 +1,5 @@
 package gui;
+
 import algorithmns.IAlgorithm;
 import algorithmns.croa.CROA;
 import algorithmns.equations.*;
@@ -350,32 +351,33 @@ public class Controller implements IUpdateable {
     @Override
     public void update(UpdateObject updateObject) {
 
-            if (updateObject.getIteration() == GlobalConfig.Iterations) {
-                try {
-                    csvWriter.addRecord(Integer.toString(updateObject.getAlgorithmCounter()), Integer.toString(updateObject.getAlgorithmCounter()), ("(" + updateObject.getBestPoint().x + "|" + updateObject.getBestPoint().y + ")"), "" + updateObject.getBestPoint().z);
-                } catch (Exception exp) {
-                    System.out.println(exp);
-                }
+        if (updateObject.getIteration() == GlobalConfig.Iterations) {
+            try {
+                csvWriter.addRecord(Integer.toString(updateObject.getAlgorithmCounter()), Integer.toString(updateObject.getAlgorithmCounter()), ("(" + updateObject.getBestPoint().x + "|" + updateObject.getBestPoint().y + ")"), "" + updateObject.getBestPoint().z);
+            } catch (Exception exp) {
+                System.out.println(exp);
             }
+        }
 
 
+        /*
+         * update charts
+         */
+        if (updateObject.getAlgorithmCounter() == 1) {
+            chartFactory.updatePointsInChart(updateObject.getPoints());
+        } else if (updateObject.getAlgorithmCounter() == 2) {
+            chartFactory2.updatePointsInChart(updateObject.getPoints());
+        }
 
-
-            /*
-             * Update GUI
-             *
-             */
+        /*
+         * update text
+         */
+        Platform.setImplicitExit(false);
         Platform.runLater(() -> {
 
             if (updateObject.getAlgorithmCounter() == 1) {
-                chartFactory.updatePointsInChart(updateObject.getPoints());
-            } else if (updateObject.getAlgorithmCounter() == 2) {
-                chartFactory2.updatePointsInChart(updateObject.getPoints());
-            }
 
-            if (updateObject.getAlgorithmCounter() == 1) {
-
-                label_Algo1.setText("CROAParamAnalysis best solution: " + updateObject.getBestPoint().toString() );
+                label_Algo1.setText("CROAParamAnalysis best solution: " + updateObject.getBestPoint().toString());
 
             } else if (updateObject.getAlgorithmCounter() == 2) {
 
@@ -383,23 +385,23 @@ public class Controller implements IUpdateable {
             }
 
             label_Iteration.setText("Iteration: " + updateObject.getIteration());
+
         });
 
+        /*
+         * Update Console
+         *
+         */
+        System.out.println("Update Received Best point of algorithmn " + updateObject.getAlgorithmCounter()
+                + " : Iteration: " + updateObject.getIteration() + " " + updateObject.getBestPoint().toParseFormat()
+                + " Population count : " + updateObject.getPoints().size());
 
-            /*
-             * Update Console
-             *
-             */
-            System.out.println("Update Received Best point of algorithmn " + updateObject.getAlgorithmCounter()
-                    + " : Iteration: " + updateObject.getIteration() + " " + updateObject.getBestPoint().toParseFormat()
-                    + " Population count : " + updateObject.getPoints().size());
-
-            //Output aller Punkte am Ende
-            if (updateObject.getIteration() == GlobalConfig.Iterations) {
-                for (int i = 0; i < updateObject.getPoints().size(); i++) {
-                    System.out.println(updateObject.getPoints().get(i).toParseFormat());
-                }
+        //Output aller Punkte am Ende
+        if (updateObject.getIteration() == GlobalConfig.Iterations) {
+            for (int i = 0; i < updateObject.getPoints().size(); i++) {
+                System.out.println(updateObject.getPoints().get(i).toParseFormat());
             }
+        }
 
     }
 

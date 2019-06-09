@@ -157,7 +157,6 @@ public class SCROA implements IAlgorithm {
 
 
      */
-
     @Override
     public void run() {
 
@@ -178,9 +177,9 @@ public class SCROA implements IAlgorithm {
                                 //Update at ZERO
                                 List<Point3d> collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                                 Point bestSolution = currentBestSolution.getBestSolutionPoint();
+
                                 gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
-                                //Wait for other Thread to Synchronize
-                                barrier.await();
+                                 barrier.await();
 
 
                                 while (!stopped) {
@@ -250,10 +249,13 @@ public class SCROA implements IAlgorithm {
 
                                             collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                                             bestSolution = currentBestSolution.getBestSolutionPoint();
+
                                             gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
                                         }
+
                                         //Wait for other Thread to Synchronize
                                         barrier.await();
+
 
                                         while (paused) {
                                             try {

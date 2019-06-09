@@ -1,6 +1,6 @@
 package algorithmns.scroa.pso;
 
-        import algorithmns.IAlgorithm;
+import algorithmns.IAlgorithm;
 import algorithmns.LocalSearcher.neighbourhoodSearch.neighbourhoodSearchSingle.INeighbourhoodSearchSingle;
 import algorithmns.LocalSearcher.neighbourhoodSearch.neighbourhoodSearchSingle.MoveAlongGrade;
 import algorithmns.LocalSearcher.neighbourhoodSearch.neighbourhoodSearchTwo.INeighbourhoodSearchTwo;
@@ -179,6 +179,7 @@ public class PSO implements IAlgorithm {
             List<Point3d> collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
             Point bestSolution = currentBestSolution.getBestSolutionPoint();
             gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
+
             //Wait for other Thread to Synchronize
             barrier.await();
 
@@ -206,6 +207,7 @@ public class PSO implements IAlgorithm {
                         collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                         bestSolution = currentBestSolution.getBestSolutionPoint();
                         gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
+
                     }
                     //Wait for other Thread to Synchronize
                     barrier.await();

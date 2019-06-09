@@ -220,8 +220,8 @@ public class ChartFactory {
                 }
 
             }
-            jzy3dPoints.addAll(jzy3dPointsToAdd);
-            chart.getScene().getGraph().add(jzy3dPointsToAdd);
+                jzy3dPoints.addAll(jzy3dPointsToAdd);
+                chart.getScene().getGraph().add(jzy3dPointsToAdd);
         }
         //Case 2: to many points
         else{

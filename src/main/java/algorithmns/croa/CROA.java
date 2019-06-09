@@ -148,150 +148,152 @@ public class CROA implements IAlgorithm {
     @Override
     public void run() {
 
-                    int onWallCollHappend = 0;
-                    int interMolColHappend = 0;
-                    int decompositionTrys = 0;
-                    int decompositionHappend = 0;
-                    int synthesisHappend = 0;
-                    int synthesisTrys = 0;
-                    double energyStart = molecules.stream().map(m -> m.getKE() + m.getPE()).collect(Collectors.summingDouble(d -> d)) + buffer.getBuffer();
 
-                    try {
+            int onWallCollHappend = 0;
+            int interMolColHappend = 0;
+            int decompositionTrys = 0;
+            int decompositionHappend = 0;
+            int synthesisHappend = 0;
+            int synthesisTrys = 0;
+            double energyStart = molecules.stream().map(m -> m.getKE() + m.getPE()).collect(Collectors.summingDouble(d -> d)) + buffer.getBuffer();
 
-                        int currentIteration = 0;
+            try {
 
-                        //Update at ZERO
-                        List<Point3d> collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
-                        Point bestSolution = currentBestSolution.getBestSolutionPoint();
-                        gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
-                        //Wait for other Thread to Synchronize
-                        barrier.await();
+                int currentIteration = 0;
 
-                        while (!stopped) {
+                //Update at ZERO
+                List<Point3d> collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
+                Point bestSolution = currentBestSolution.getBestSolutionPoint();
+                gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
 
-                            if(currentIteration < GlobalConfig.Iterations ){
-                            currentIteration++;
-                            double randomCollission = randomGenerator.nextDouble();
+                //Wait for other Thread to Synchronize
+                barrier.await();
+
+                while (!stopped) {
+
+                    if (currentIteration < GlobalConfig.Iterations) {
+                        currentIteration++;
+                        double randomCollission = randomGenerator.nextDouble();
 
 
-                            //unimolekular reaction
-                            if (randomCollission >= equation.getConfiguration().moleColl || molecules.size() == 1) {
+                        //unimolekular reaction
+                        if (randomCollission >= equation.getConfiguration().moleColl || molecules.size() == 1) {
 
-                                int randomIndex = randomGenerator.nextInt(0, molecules.size() - 1);
+                            int randomIndex = randomGenerator.nextInt(0, molecules.size() - 1);
 
-                                IMolecule selectedMolecule = molecules.get(randomIndex);
+                            IMolecule selectedMolecule = molecules.get(randomIndex);
 
-                                if (selectedMolecule.getNumberOfHits() >= equation.getConfiguration().numberOfHitsForDecomposition) {
-                                    //decomposition
-                                    decompositionTrys++;
-                                    List<IMolecule> decompositionResult = chemicalReactions.decomposition(selectedMolecule);
-                                    if (decompositionResult.size() == 2) {
+                            if (selectedMolecule.getNumberOfHits() >= equation.getConfiguration().numberOfHitsForDecomposition) {
+                                //decomposition
+                                decompositionTrys++;
+                                List<IMolecule> decompositionResult = chemicalReactions.decomposition(selectedMolecule);
+                                if (decompositionResult.size() == 2) {
 
-                                        // System.out.println("--------Decomposition------------");
-                                        decompositionHappend++;
-                                        molecules.remove(randomIndex);
-                                        molecules.add(decompositionResult.get(0));
-                                        molecules.add(decompositionResult.get(1));
-                                    }
-
-                                } else {
-                                    //onWall
-                                    // System.out.println("--------onWallIneffectivce------------");
-                                    onWallCollHappend++;
-                                    chemicalReactions.onWallIneffectivCollission(selectedMolecule);
+                                    // System.out.println("--------Decomposition------------");
+                                    decompositionHappend++;
+                                    molecules.remove(randomIndex);
+                                    molecules.add(decompositionResult.get(0));
+                                    molecules.add(decompositionResult.get(1));
                                 }
 
-                                //intermolekular reaction
                             } else {
-
-                                int randomIndex1 = randomGenerator.nextInt(0, molecules.size() - 1);
-                                int randomIndex2 = randomGenerator.nextInt(0, molecules.size() - 1);
-
-                                while (randomIndex1 == randomIndex2) {
-                                    randomIndex2 = randomGenerator.nextInt(0, molecules.size() - 1);
-                                }
-
-                                IMolecule molecule1 = molecules.get(randomIndex1);
-                                IMolecule molecule2 = molecules.get(randomIndex2);
-
-                                if (molecule1.getKE() <= equation.getConfiguration().minimumKe && molecule2.getKE() <= equation.getConfiguration().minimumKe) {
-                                    //synthesis
-                                    synthesisTrys++;
-
-                                    IMolecule synthesisResult = chemicalReactions.synthesis(molecule1, molecule2);
-                                    if (synthesisResult != null) {
-                                        // System.out.println("--------Synthesis------------");
-                                        synthesisHappend++;
-                                        molecules.remove(molecule1);
-                                        molecules.remove(molecule2);
-                                        molecules.add(synthesisResult);
-                                    }
-
-                                } else {
-                                    //intermolcol
-                                    // System.out.println("--------interMolIneffectivce------------");
-                                    interMolColHappend++;
-
-                                    chemicalReactions.interMolecularIneffectiveCollision(molecule1, molecule2);
-                                }
-
+                                //onWall
+                                // System.out.println("--------onWallIneffectivce------------");
+                                onWallCollHappend++;
+                                chemicalReactions.onWallIneffectivCollission(selectedMolecule);
                             }
 
+                            //intermolekular reaction
+                        } else {
 
-                            if (GlobalConfig.loggin) {
-                                loggerFileWriter.logBestSolution("Croa", currentIteration, currentBestSolution.getBestSolutionPoint(), currentBestSolution.getBestPE());
+                            int randomIndex1 = randomGenerator.nextInt(0, molecules.size() - 1);
+                            int randomIndex2 = randomGenerator.nextInt(0, molecules.size() - 1);
+
+                            while (randomIndex1 == randomIndex2) {
+                                randomIndex2 = randomGenerator.nextInt(0, molecules.size() - 1);
                             }
 
-                            if (currentIteration % GlobalConfig.updateAfterIterations == 0 || pause) {
-                                collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
-                                bestSolution = currentBestSolution.getBestSolutionPoint();
-                                gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
-                            }
+                            IMolecule molecule1 = molecules.get(randomIndex1);
+                            IMolecule molecule2 = molecules.get(randomIndex2);
 
-                            //Wait for other Thread to Synchronize
-                            barrier.await();
+                            if (molecule1.getKE() <= equation.getConfiguration().minimumKe && molecule2.getKE() <= equation.getConfiguration().minimumKe) {
+                                //synthesis
+                                synthesisTrys++;
 
-                            while (pause){
-                                try{
-                                    Thread.sleep(5);
-                                }catch (Exception exp){
-
+                                IMolecule synthesisResult = chemicalReactions.synthesis(molecule1, molecule2);
+                                if (synthesisResult != null) {
+                                    // System.out.println("--------Synthesis------------");
+                                    synthesisHappend++;
+                                    molecules.remove(molecule1);
+                                    molecules.remove(molecule2);
+                                    molecules.add(synthesisResult);
                                 }
-                            }
 
-                        }else if(currentIteration>=GlobalConfig.Iterations) {
-                                //If Thread is finished, wait 200ms -> next Iteration and wait for Stop or iterations are raised....
-                                try{
-                                    Thread.sleep(5);
-                                }catch (Exception exp){
+                            } else {
+                                //intermolcol
+                                // System.out.println("--------interMolIneffectivce------------");
+                                interMolColHappend++;
 
-                                }
+                                chemicalReactions.interMolecularIneffectiveCollision(molecule1, molecule2);
                             }
 
                         }
-                    } catch (Exception exp) {
-                       if (GlobalConfig.loggin) {
-                           loggerFileWriter.logInformation("croa Thread ended in an Exception: " + exp);
-                       }else {
-                           System.out.println("Exception in CROA Thread "+exp.toString());
-                           exp.printStackTrace();
-                       }
+
+
+                        if (GlobalConfig.loggin) {
+                            loggerFileWriter.logBestSolution("Croa", currentIteration, currentBestSolution.getBestSolutionPoint(), currentBestSolution.getBestPE());
+                        }
+
+                        if (currentIteration % GlobalConfig.updateAfterIterations == 0 || pause) {
+                            collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
+                            bestSolution = currentBestSolution.getBestSolutionPoint();
+                            gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
+                        }
+
+                        //Wait for other Thread to Synchronize
+                        barrier.await();
+
+                        while (pause) {
+                            try {
+                                Thread.sleep(5);
+                            } catch (Exception exp) {
+
+                            }
+                        }
+
+                    } else if (currentIteration >= GlobalConfig.Iterations) {
+                        //If Thread is finished, wait 200ms -> next Iteration and wait for Stop or iterations are raised....
+                        try {
+                            Thread.sleep(5);
+                        } catch (Exception exp) {
+
+                        }
                     }
 
+                }
+            } catch (Exception exp) {
+                if (GlobalConfig.loggin) {
+                    loggerFileWriter.logInformation("croa Thread ended in an Exception: " + exp);
+                } else {
+                    System.out.println("Exception in CROA Thread " + exp.toString());
+                    exp.printStackTrace();
+                }
+            }
 
-                    double energyEnd = molecules.stream().map(m -> m.getKE() + m.getPE()).collect(Collectors.summingDouble(d -> d)) + buffer.getBuffer();
-                    System.out.println("CROAParamAnalysis  algorithm ("+algorithmCounter+") Best Point"+(new Point3d(currentBestSolution.getBestSolutionPoint().x,currentBestSolution.getBestSolutionPoint().y,currentBestSolution.getBestPE()).toParseFormat()));
-                    System.out.println("CROAParamAnalysis  algorithm (" +algorithmCounter+ ") Engieblinazstart : " + energyStart + "Engieblinazende : " + energyEnd + " start - end" + (energyStart - energyEnd));
-                    System.out.println("CROAParamAnalysis  algorithm (" +algorithmCounter+ ") interMol: " + interMolColHappend + " onWallin " + onWallCollHappend + " synthesis trys: "+synthesisTrys+" synthesis happend : " + synthesisHappend +" decomposition trys: "+ decompositionTrys+" decomposition happend " + decompositionHappend);
-                    System.out.println("CROAParamAnalysis  algorithm (" +algorithmCounter+ ") Average KE end " + molecules.stream().map(m -> m.getKE()).collect(Collectors.averagingDouble(d -> d)));
-                    System.out.println("CROAParamAnalysis  algorithm (" +algorithmCounter+ ") buffer at end " + buffer.getBuffer());
-                    System.out.println("___________________________________________");
-                    System.out.println();
-                    try {
-                     barrier.await();
-                    }catch (Exception exp){
 
-                    }
+            double energyEnd = molecules.stream().map(m -> m.getKE() + m.getPE()).collect(Collectors.summingDouble(d -> d)) + buffer.getBuffer();
+            System.out.println("CROAParamAnalysis  algorithm (" + algorithmCounter + ") Best Point" + (new Point3d(currentBestSolution.getBestSolutionPoint().x, currentBestSolution.getBestSolutionPoint().y, currentBestSolution.getBestPE()).toParseFormat()));
+            System.out.println("CROAParamAnalysis  algorithm (" + algorithmCounter + ") Engieblinazstart : " + energyStart + "Engieblinazende : " + energyEnd + " start - end" + (energyStart - energyEnd));
+            System.out.println("CROAParamAnalysis  algorithm (" + algorithmCounter + ") interMol: " + interMolColHappend + " onWallin " + onWallCollHappend + " synthesis trys: " + synthesisTrys + " synthesis happend : " + synthesisHappend + " decomposition trys: " + decompositionTrys + " decomposition happend " + decompositionHappend);
+            System.out.println("CROAParamAnalysis  algorithm (" + algorithmCounter + ") Average KE end " + molecules.stream().map(m -> m.getKE()).collect(Collectors.averagingDouble(d -> d)));
+            System.out.println("CROAParamAnalysis  algorithm (" + algorithmCounter + ") buffer at end " + buffer.getBuffer());
+            System.out.println("___________________________________________");
+            System.out.println();
+            try {
+                barrier.await();
+            } catch (Exception exp) {
+
+            }
     }
 
     public void pause(){

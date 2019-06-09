@@ -9,7 +9,7 @@ public class GlobalConfig {
    // public static ConfigurationAlgorithm configurationAlgorithmCROA = new ConfigurationAlgorithm(); //Default config.. Set when new Equation loaded
    // public static ConfigurationAlgorithm configurationAlgorithmSCROA = new ConfigurationAlgorithm(); //Default config.. Set when new Equation loaded
 
-    public static int updateAfterIterations = 500;
+    public static int updateAfterIterations = 100;
 
    // public static int PopSize = 50; //Initial Population size
     public static int Iterations = 10000;
