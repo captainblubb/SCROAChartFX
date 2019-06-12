@@ -4,6 +4,7 @@ import algorithmns.IAlgorithm;
 import algorithmns.croa.CROA;
 import algorithmns.equations.*;
 import algorithmns.scroa.SCROA;
+import algorithmns.scroa.pso.PSO;
 import configuration.configuration.GlobalConfig;
 import gui.ChartFactory.ChartFactory;
 import gui.comboBoxItems.ComboBoxItem;
@@ -76,8 +77,8 @@ public class Controller implements IUpdateable {
     volatile Thread worker;
     volatile Thread worker2;
 
-    volatile IAlgorithm croa;
-    volatile IAlgorithm scroa;
+    volatile IAlgorithm algorithmnLeft;
+    volatile IAlgorithm algorithmnRight;
 
     @FXML
     public Pane chartLeft;
@@ -89,11 +90,17 @@ public class Controller implements IUpdateable {
     volatile boolean showSurface = true;
 
 
+    @FXML
+    public ComboBox<String> algoLeft;
+
+    @FXML
+    public ComboBox<String> algoRight;
+
     boolean initalized = false;
 
     volatile CyclicBarrier cyclicBarrier;
 
-    String selectedCombo = "Rosenbrock";
+    String selectedCombo = "Rastirgin";
 
 
 
@@ -121,6 +128,12 @@ public class Controller implements IUpdateable {
             }
         });
 
+        algoLeft.getSelectionModel().select(0);
+
+        algoRight.getSelectionModel().select(0);
+
+        functionComboBox.getSelectionModel().select(0);
+
         System.out.println("JavaFx Initialized");
 
         //JZY3D initialize ChartFactory
@@ -128,8 +141,8 @@ public class Controller implements IUpdateable {
         chartFactory2 = new gui.ChartFactory.ChartFactory();
         int pointsPerMM = 120;
 
-        currentEquation1 = new Rosenbrock("CROA");
-        currentEquation2 = new Rosenbrock("SCROA");
+        currentEquation1 = new Rastrigin("CROA");
+        currentEquation2 = new Rastrigin("SCROA");
         //GlobalConfig.ConfigurationAlgorithm = currentEquation.getConfiguration();
         mapper1 = new Mapper() {
             @Override
@@ -160,7 +173,7 @@ public class Controller implements IUpdateable {
         chartHBox.setHgrow(chartLeft, Priority.ALWAYS);
         chartHBox.setHgrow(chartRight,Priority.ALWAYS);
 
-
+        initalized=true;
 
     }
 
@@ -174,7 +187,8 @@ public class Controller implements IUpdateable {
 
             switch (selectedCombo){
 
-                case "Rosenbrock":  currentEquation1 = new Rosenbrock("CROA");
+                case "Rosenbrock":
+                                    currentEquation1 = new Rosenbrock("CROA");
                                     currentEquation2 = new Rosenbrock("SCROA");
                                     break;
 
@@ -194,13 +208,50 @@ public class Controller implements IUpdateable {
         }
     }
 
+    public IEquation getEquation(String algorithmn) {
+        if (!selectedCombo.equals(functionComboBox.getSelectionModel().toString())) {
+            selectedCombo = functionComboBox.getSelectionModel().getSelectedItem();
+
+            switch (selectedCombo) {
+
+                case "Rosenbrock":
+                    return new Rosenbrock(algorithmn);
+                case "Rastirgin":
+                    return new Rastrigin(algorithmn);
+                case "Ackley":
+                    return new Ackley(algorithmn);
+                case "MishrasBird":
+                    return new MishrasBird(algorithmn);
+            }
+        }
+        return new Rosenbrock("CROA");
+    }
+
+
+    //Change Equation after selected
+    @FXML
+    public void comboBoxActionAlgoLeft(ActionEvent event){
+
+    }
+
+
+    //Change Equation after selected
+    @FXML
+    public void comboBoxActionAlgoRight(ActionEvent event){
+
+    }
+
     private void initializeComboBox() {
 
-        functionComboBox.getItems().addAll("Rosenbrock","Rastirgin","Ackley");
+        functionComboBox.getItems().addAll("Rastirgin","Rosenbrock","Ackley");
         //Set the cellFactory property
         functionComboBox.setCellFactory(listview -> new ComboBoxItem());
         // Set Icon as Selections the buttonCell property
         //functionComboBox.setButtonCell(new ComboBoxItem());
+
+        algoLeft.getItems().addAll("CROA","PSO","SCROA");
+        algoRight.getItems().addAll("CROA","PSO","SCROA");
+
 
     }
 
@@ -260,28 +311,70 @@ public class Controller implements IUpdateable {
         pauseButton.setDisable(false);
         slider.setDisable(true);
 
+
+
         if (paused){
 
-            croa.goOn();
-            scroa.goOn();
+            algorithmnLeft.goOn();
+            algorithmnRight.goOn();
 
 
         }else {
 
-            if (initalized) {
+            if (!initalized) {
                 reinitialize();
             }
 
-            //Cyclic to synchronize both croa and scroa iterations
+            //Cyclic to synchronize both algorithmnLeft and algorithmnRight iterations
             cyclicBarrier = new CyclicBarrier(2);
             //GlobalConfig.ConfigurationAlgorithm = equation.getConfiguration();
 
 
-            croa = new CROA(currentEquation1, this, 1, cyclicBarrier);
-            scroa = new SCROA(currentEquation2, this, 2, cyclicBarrier);
+            //Set Algorithmn
+            switch (algoLeft.getSelectionModel().getSelectedItem()){
 
-            worker = new Thread(croa);
-            worker2 = new Thread(scroa);
+                case "CROA" :
+                    label_Algo1.setText("CROA no Solution yet");
+                    currentEquation1 = getEquation("CROA");
+                    algorithmnLeft = new CROA(currentEquation1, this, 1, cyclicBarrier);
+                    break;
+                case "SCROA":
+                    label_Algo1.setText("SCROA no Solution yet");
+                    currentEquation1 = getEquation("SCROA");
+                    algorithmnLeft = new SCROA(currentEquation1, this, 1, cyclicBarrier);
+                    break;
+                case "PSO":
+                    label_Algo1.setText("PSO no Solution yet");
+                    currentEquation1 = getEquation("PSO");
+                    algorithmnLeft = new PSO(currentEquation1, this, 1, cyclicBarrier);
+                    break;
+            }
+
+            //Set Algorithmn
+            switch (algoRight.getSelectionModel().getSelectedItem()){
+
+                case "CROA" :
+                    label_Algo2.setText("CROA no Solution yet");
+                    currentEquation2 = getEquation("CROA");
+                    algorithmnRight = new CROA(currentEquation1, this, 2, cyclicBarrier);
+                    break;
+                case "SCROA":
+                    label_Algo2.setText("SCROA no Solution yet");
+                    currentEquation2 = getEquation("SCROA");
+                    algorithmnRight = new SCROA(currentEquation1, this, 2, cyclicBarrier);
+                    break;
+                case "PSO":
+
+                    label_Algo2.setText("PSO no Solution yet");
+                    currentEquation2 = getEquation("PSO");
+                    algorithmnRight = new PSO(currentEquation1, this, 2, cyclicBarrier);
+                    break;
+            }
+
+            reinitialize();
+
+            worker = new Thread(algorithmnLeft);
+            worker2 = new Thread(algorithmnRight);
 
             worker.start();
             worker2.start();
@@ -302,8 +395,10 @@ public class Controller implements IUpdateable {
         pauseButton.setDisable(true);
         startButton.setDisable(false);
         paused = false;
-        scroa.stop();
-        croa.stop();
+        algorithmnRight.stop();
+        algorithmnLeft.stop();
+        worker.interrupt();
+        worker2.interrupt();
         functionComboBox.disableProperty().setValue(false);
 
     }
@@ -318,8 +413,8 @@ public class Controller implements IUpdateable {
         stopButton.setDisable(false);
         startButton.setDisable(false);
         pauseButton.setDisable(true);
-        croa.pause();
-        scroa.pause();
+        algorithmnLeft.pause();
+        algorithmnRight.pause();
         functionComboBox.disableProperty().setValue(true);
 
     }
@@ -377,11 +472,11 @@ public class Controller implements IUpdateable {
 
             if (updateObject.getAlgorithmCounter() == 1) {
 
-                label_Algo1.setText("CROAParamAnalysis best solution: " + updateObject.getBestPoint().toString());
+                label_Algo1.setText(updateObject.getAlgoName()+" best solution: " + updateObject.getBestPoint().toString());
 
             } else if (updateObject.getAlgorithmCounter() == 2) {
 
-                label_Algo2.setText("SCROAParamAnalysis best solution: " + updateObject.getBestPoint().toString());
+                label_Algo2.setText(updateObject.getAlgoName()+" best solution: " + updateObject.getBestPoint().toString());
             }
 
             label_Iteration.setText("Iteration: " + updateObject.getIteration());

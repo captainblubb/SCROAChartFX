@@ -56,7 +56,7 @@ public class Ackley implements IEquation {
                     0.1,   //keMinLossRate
                     0.56,   //moleColl %
                     20.0,  //initialKE
-                    5.0,   //minimumKE
+                    2.0,   //minimumKE
                     2000.0,   //initialBuffer
                     33,    //numberOfHitsForDecomposition
                     0.0992, //MoveAlonGradeMaxStep);

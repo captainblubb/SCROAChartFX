@@ -10,7 +10,7 @@
                 <Button fx:id="startButton" mnemonicParsing="false" onAction="#startSimulation" text="Start" prefWidth="75" />
                 <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#stopSimulation" text="Stop" />
                 <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseSimulation" text="Pause" />
-                <ComboBox fx:id="functionComboBox" prefWidth="175.0" promptText="Rosenbrock" onAction="#comboBoxAction" />
+                <ComboBox fx:id="functionComboBox" prefWidth="175.0" promptText="Rastirgin" onAction="#comboBoxAction" />
                 <Button fx:id="toggleSurface" mnemonicParsing="false" onAction="#toggleSurface" text="Surface" />
                 <Button fx:id="enableLogging" mnemonicParsing="false" onAction="#enableLogging" text="Logging off" />
 
@@ -27,7 +27,7 @@
                 <HBox alignment="CENTER_LEFT">
                     <children>
                         <!--Algorithmn Selection Left -->
-                        <ComboBox fx:id="algoLeft" prefWidth="300.0" promptText="CROA" disable="false"></ComboBox>
+                        <ComboBox fx:id="algoLeft" prefWidth="300.0" promptText="CROA" disable="false" onAction="#comboBoxActionAlgoLeft"></ComboBox>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER">
@@ -38,7 +38,7 @@
                 <HBox alignment="CENTER_LEFT">
                     <children>
                         <!--Algorithmn Selection Right -->
-                        <ComboBox fx:id="algoRight" prefWidth="300.0" promptText="SCROA" disable="false"></ComboBox>
+                        <ComboBox fx:id="algoRight" prefWidth="300.0" promptText="SCROA" disable="false" onAction="#comboBoxActionAlgoRight"></ComboBox>
                     </children>
                 </HBox>
 

@@ -35,7 +35,10 @@ import gui.updateObject.UpdateObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 public class CROA implements IAlgorithm {
@@ -143,6 +146,15 @@ public class CROA implements IAlgorithm {
     @Override
     public void stop(){
         stopped = true;
+        try {
+            barrier.await(100, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -164,7 +176,7 @@ public class CROA implements IAlgorithm {
                 //Update at ZERO
                 List<Point3d> collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                 Point bestSolution = currentBestSolution.getBestSolutionPoint();
-                gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
+                gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration,"CROA"));
 
                 //Wait for other Thread to Synchronize
                 barrier.await();
@@ -247,7 +259,7 @@ public class CROA implements IAlgorithm {
                         if (currentIteration % GlobalConfig.updateAfterIterations == 0 || pause) {
                             collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                             bestSolution = currentBestSolution.getBestSolutionPoint();
-                            gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
+                            gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration,"CROA"));
                         }
 
                         //Wait for other Thread to Synchronize

@@ -34,7 +34,10 @@ import gui.updateObject.UpdateObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 
@@ -178,7 +181,7 @@ public class SCROA implements IAlgorithm {
                                 List<Point3d> collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                                 Point bestSolution = currentBestSolution.getBestSolutionPoint();
 
-                                gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
+                                gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration,"SCROA"));
                                  barrier.await();
 
 
@@ -250,7 +253,7 @@ public class SCROA implements IAlgorithm {
                                             collect = molecules.stream().map(m -> new Point3d(m.getCurrentStructure().x, m.getCurrentStructure().y, m.getPE())).collect(Collectors.toList());
                                             bestSolution = currentBestSolution.getBestSolutionPoint();
 
-                                            gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration));
+                                            gui.update(new UpdateObject(collect, new Point3d(bestSolution.x, bestSolution.y, currentBestSolution.getBestPE()), algorithmCounter, currentIteration,"SCROA"));
                                         }
 
                                         //Wait for other Thread to Synchronize
@@ -298,6 +301,15 @@ public class SCROA implements IAlgorithm {
     @Override
     public void stop(){
         stopped = true;
+        try {
+            barrier.await(100, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

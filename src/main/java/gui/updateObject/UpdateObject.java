@@ -11,6 +11,7 @@ public class UpdateObject {
     //beste Lösung -> Textuelle anzeige
     private Point3d bestPoint;
 
+    private String algoName;
 
 
     //Für gui -> Linkes oder Rechtes Fenster updaten
@@ -19,7 +20,8 @@ public class UpdateObject {
     //Aktuelle Iteration
     int iteration;
 
-    public UpdateObject(List<Point3d> points, Point3d bestPoint, int algorithmCounter, int iteration) {
+    public UpdateObject(List<Point3d> points, Point3d bestPoint, int algorithmCounter, int iteration, String algoName) {
+        this.algoName = algoName;
         this.points = points;
         this.bestPoint = bestPoint;
         this.algorithmCounter = algorithmCounter;
@@ -41,5 +43,13 @@ public class UpdateObject {
 
     public int getIteration() {
         return iteration;
+    }
+
+    public String getAlgoName() {
+        return algoName;
+    }
+
+    public void setAlgoName(String algoName) {
+        this.algoName = algoName;
     }
 }

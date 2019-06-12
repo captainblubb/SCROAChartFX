@@ -204,7 +204,6 @@ public class ChartFactory {
     public synchronized void updatePointsInChart(List<Point3d> points3d){
 
         try {
-
         //Case 1: not enough points
         if(jzy3dPoints.size()<points3d.size()) {
 
